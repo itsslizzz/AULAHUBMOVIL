@@ -33,14 +33,21 @@ android {
 }
 
 dependencies {
+     //BomMde Firebase: fija versiones de todos  los modulos de Firebase
+    implementation(platform(libs.firebase.bom))
 
+    //Módulos Firebase SIN version (lo pone el BoM
+    implementation(libs.firebase.analytics)
+    implementation(libs.firebase.auth)
+
+    // AndroidX y tests
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
     androidTestImplementation(libs.espresso.core)
-    implementation(platform("com.google.firebase:firebase-bom:34.3.0"))
-    implementation("com.google.firebase:firebase-analytics")
+
 }
