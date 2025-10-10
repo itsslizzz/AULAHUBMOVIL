@@ -1,6 +1,7 @@
 <resources>
     <string name="app_name">AULAHUB</string>
-    <string name="Hint_email">Proporciona tu correo</string>
     <string name="iniciar_sesion">Iniciar sesion</string>
-    <string name="Hint_password">Proporciona tu contraseña</string>
+    <string name="bienvenid">Bienvenid@</string>
+    <string name="ingrese_sus_datos">Ingrese sus datos</string>
+    <string name="aulahub">AULAHUB</string>
 </resources>
