@@ -40,11 +40,15 @@ dependencies {
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
 
+    // Implementacion de la base de datos
+    implementation(libs.firebase.firestore)
+
     // AndroidX y tests
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
+
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)
