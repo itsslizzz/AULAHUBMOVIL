@@ -8,9 +8,9 @@
   "client": [
     {
       "client_info": {
-        "mobilesdk_app_id": "1:789863629023:android:0c6ca3aa8efc7917f4696a",
+        "mobilesdk_app_id": "1:789863629023:android:13a75efdfb358960f4696a",
         "android_client_info": {
-          "package_name": "om.example.aulahub"
+          "package_name": "com.example.aulahub"
         }
       },
       "oauth_client": [],

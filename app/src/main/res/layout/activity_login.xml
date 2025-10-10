@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/centroti"
@@ -13,7 +14,7 @@
         android:background="#B3FFFFFF">
 
         <TextView
-            android:id="@+id/textv_aulahub"
+            android:id="@+id/TVaulahub"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="50dp"
@@ -25,7 +26,7 @@
             android:textStyle="bold" />
 
         <androidx.cardview.widget.CardView
-            android:id="@+id/card_login"
+            android:id="@+id/CVlogin"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="20dp"
@@ -43,7 +44,7 @@
                 android:padding="20dp">
 
                 <TextView
-                    android:id="@+id/tv_welcome"
+                    android:id="@+id/TVwelcome"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:fontFamily="sans-serif-medium"
@@ -53,7 +54,7 @@
                     android:textStyle="bold" />
 
                 <TextView
-                    android:id="@+id/tv_login_info"
+                    android:id="@+id/TVLoginFic"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="6dp"
@@ -62,49 +63,51 @@
                     android:textSize="17sp" />
 
                 <TextView
-                    android:id="@+id/tv_email_label"
+                    android:id="@+id/TVEmailLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Email:"
+                    android:text="@string/email"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 
                 <EditText
-                    android:id="@+id/et_email"
+                    android:id="@+id/ETemail"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:inputType="textEmailAddress"
+                    android:layout_marginEnd="20dp"
                     android:autofillHints="emailAddress"
-                    android:layout_marginEnd="20dp" />
+                    android:inputType="textEmailAddress"
+                    tools:ignore="LabelFor" />
 
                 <TextView
-                    android:id="@+id/tv_password_label"
+                    android:id="@+id/TVpasswordLabel"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="12dp"
-                    android:text="Contraseña"
+                    android:text="@string/TextPassword"
                     android:textColor="@color/white"
                     android:textSize="17sp" />
 
                 <EditText
-                    android:id="@+id/et_password"
+                    android:id="@+id/ETpassword"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="4dp"
-                    android:inputType="textPassword"
+                    android:layout_marginEnd="20dp"
                     android:autofillHints="password"
-                    android:layout_marginEnd="20dp" />
+                    android:inputType="textPassword"
+                    tools:ignore="LabelFor" />
 
                 <Button
-                    android:id="@+id/btn_login"
+                    android:id="@+id/btnlogin"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Iniciar Sesion"
-                    android:backgroundTint="@color/Cafe_Fic"
                     android:layout_gravity="center"
-                    android:layout_marginTop="20dp" />
+                    android:layout_marginTop="20dp"
+                    android:backgroundTint="@color/Cafe_Fic"
+                    android:text="@string/TextIniciarSesion" />
 
             </LinearLayout>
 

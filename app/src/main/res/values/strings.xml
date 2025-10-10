@@ -4,4 +4,8 @@
     <string name="bienvenid">Bienvenid@</string>
     <string name="ingrese_sus_datos">Ingrese sus datos</string>
     <string name="aulahub">AULAHUB</string>
+    <string name="email">Email</string>
+    <string name="TextPassword">Contraseña</string>
+    <string name="TextIniciarSesion">Iniciar Sesion</string>
+    <string name="showEmail">Email</string>
 </resources>
