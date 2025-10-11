@@ -8,4 +8,15 @@
     <string name="TextPassword">Contraseña</string>
     <string name="TextIniciarSesion">Iniciar Sesion</string>
     <string name="showEmail">Email</string>
+    <string name="logo_de_la_facultad">logo de la facultad</string>
+    <string name="contrase_a">Contraseña</string>
+    <string name="iniciar_s">INICIAR SESIÓN</string>
+    <string name="seleccion_aula">Selecciona el aula a reservar</string>
+    <string name="capacidad_para_30_personas">Capacidad para 30 personas</string>
+    <string name="laboratorio_de_c_mputo_b">Laboratorio de Cómputo B</string>
+    <string name="capacidad_para_50_personas">Capacidad para 50 personas</string>
+    <string name="laboratorio_de_c_mputo_a">Laboratorio de Cómputo A</string>
+    <string name="laboratorio_de_computo_c">Laboratorio de Cómputo C</string>
+    <string name="capacidad_para_200_personas">Capacidad para 200 personas</string>
+    <string name="auditorio_fic">Auditorio FIC</string>
 </resources>

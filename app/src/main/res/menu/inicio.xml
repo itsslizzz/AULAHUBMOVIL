@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <item android:title="Notificaciones"
+        android:id="@+id/item_notificaciones"
+        android:icon="@drawable/campana"
+        app:showAsAction="always"/>
+
+    <item android:title="Contacto"
+        android:id="@+id/item_contacto"
+        app:showAsAction="never"/>
+    <item android:title="Cerrar Sesión"
+        app:showAsAction="never"/>
+</menu>
+
