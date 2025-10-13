@@ -16,7 +16,11 @@
     <string name="laboratorio_de_c_mputo_b">Laboratorio de Cómputo B</string>
     <string name="capacidad_para_50_personas">Capacidad para 50 personas</string>
     <string name="laboratorio_de_c_mputo_a">Laboratorio de Cómputo A</string>
-    <string name="laboratorio_de_computo_c">Laboratorio de Cómputo C</string>
+    <string name="laboratorio_de_computo_c">Laboratorio de Cómputo </string>
     <string name="capacidad_para_200_personas">Capacidad para 200 personas</string>
     <string name="auditorio_fic">Auditorio FIC</string>
+    <string name="modulo_1">Modulo 1</string>
+    <string name="modulo_2">Modulo 2</string>
+    <string name="materia">Materia</string>
+    <string name="grupo">Grupo</string>
 </resources>
