@@ -1,97 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:id="@+id/login">
+    android:id="@+id/login"
+    android:padding="24dp"
+    android:background="@color/white">
+    <ImageView
+        android:id="@+id/logoFIC"
+        android:layout_width="120dp"
+        android:layout_height="120dp"
+        android:src="@drawable/logofic"
+        android:contentDescription="@string/logo_de_la_facultad"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="60dp" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        xmlns:android="http://schemas.android.com/apk/res/android"
-        xmlns:app="http://schemas.android.com/apk/res-auto"
-        xmlns:tools="http://schemas.android.com/tools"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="24dp"
-        android:background="@color/white">
+    <TextView
+        android:id="@+id/TVaulahub"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:fontFamily="sans-serif-medium"
+        android:text="@string/aulahub"
+        android:textColor="@color/black"
+        android:textSize="33sp"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/logoFIC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"/>
 
-        <ImageView
-            android:id="@+id/logoFIC"
-            android:layout_width="120dp"
-            android:layout_height="120dp"
-            android:src="@drawable/logofic"
-            android:contentDescription="@string/logo_de_la_facultad"
-            app:layout_constraintTop_toTopOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="60dp" />
-
-        <TextView
-            android:id="@+id/TVaulahub"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:fontFamily="sans-serif-medium"
-            android:text="@string/aulahub"
-            android:textColor="@color/black"
-            android:textSize="33sp"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/logoFIC"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp"/>
-
-        <EditText
-            android:id="@+id/ETemail"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/email"
-            android:inputType="textEmailAddress"
-            android:backgroundTint="@color/black"
-            android:textColorHint="@color/black"
-            android:autofillHints="emailAddress"
-            app:layout_constraintTop_toBottomOf="@id/TVaulahub"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="32dp"
-            android:layout_marginHorizontal="24dp"/>
+    <EditText
+        android:id="@+id/ETemail"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/TextEmail"
+        android:inputType="textEmailAddress"
+        android:backgroundTint="@color/black"
+        android:textColorHint="@color/black"
+        android:autofillHints="emailAddress"
+        app:layout_constraintTop_toBottomOf="@id/TVaulahub"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="32dp"
+        android:layout_marginHorizontal="24dp"/>
 
 
-        <EditText
-            android:id="@+id/ETpassword"
-            android:layout_width="0dp"
-            android:layout_height="wrap_content"
-            android:hint="@string/contrase_a"
-            android:inputType="textPassword"
-            android:backgroundTint="@color/black"
-            android:textColorHint="@color/black"
-            android:autofillHints="password"
-            app:layout_constraintTop_toBottomOf="@id/ETemail"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="16dp"
-            android:layout_marginHorizontal="24dp"/>
+    <EditText
+        android:id="@+id/ETpassword"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:hint="@string/TextPassword"
+        android:inputType="textPassword"
+        android:backgroundTint="@color/black"
+        android:textColorHint="@color/black"
+        android:autofillHints="password"
+        app:layout_constraintTop_toBottomOf="@id/ETemail"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="16dp"
+        android:layout_marginHorizontal="24dp"/>
 
 
-        <Button
-            android:id="@+id/btnlogin"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/iniciar_s"
-            android:backgroundTint="#C8A24C"
-            android:textColor="@android:color/white"
-            android:textStyle="bold"
-            app:layout_constraintTop_toBottomOf="@id/ETpassword"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            android:layout_marginTop="24dp"
-            android:layout_marginHorizontal="24dp"/>
+    <Button
+        android:id="@+id/btnlogin"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/TextIniciarSesion"
+        android:backgroundTint="#C8A24C"
+        android:textColor="@android:color/white"
+        android:textStyle="bold"
+        app:layout_constraintTop_toBottomOf="@id/ETpassword"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="24dp"
+        android:layout_marginHorizontal="24dp"/>
 
-
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
-
-
-
-</RelativeLayout>
-
+</androidx.constraintlayout.widget.ConstraintLayout>
