@@ -1,6 +1,5 @@
 <resources>
     <string name="app_name">AULAHUB</string>
-    <string name="iniciar_sesion">Iniciar sesion</string>
     <string name="bienvenid">Bienvenid@</string>
     <string name="ingrese_sus_datos">Ingrese sus datos</string>
     <string name="aulahub">AULAHUB</string>
@@ -9,8 +8,6 @@
     <string name="TextIniciarSesion">Iniciar Sesion</string>
     <string name="showEmail">Email</string>
     <string name="logo_de_la_facultad">logo de la facultad</string>
-    <string name="contrase_a">Contraseña</string>
-    <string name="iniciar_s">INICIAR SESIÓN</string>
     <string name="seleccion_aula">Selecciona el aula a reservar</string>
     <string name="capacidad_para_30_personas">Capacidad para 30 personas</string>
     <string name="laboratorio_de_c_mputo_b">Laboratorio de Cómputo B</string>
@@ -23,4 +20,5 @@
     <string name="modulo_2">Modulo 2</string>
     <string name="materia">Materia</string>
     <string name="grupo">Grupo</string>
+    <string name="btnSignOut">Cerrar sesion</string>
 </resources>
