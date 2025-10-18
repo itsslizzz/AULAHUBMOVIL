@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+
     <string-array name="Materias">
         <item>Programacion (Matutina)</item>
         <item>Bases de Datos (Matutina)</item>
@@ -7,14 +8,18 @@
     </string-array>
 
     <string-array name="grupos_prog_mat">
-        <item>1A</item><item>1B</item>
-    </string-array>
-    <string-array name="grupos_bd_mat">
-        <item>2A</item><item>2B</item>
-    </string-array>
-    <string-array name="grupos_prog_vesp">
-        <item>3A</item><item>3B</item>
+        <item>1A</item>
+        <item>1B</item>
     </string-array>
 
+    <string-array name="grupos_bd_mat">
+        <item>2A</item>
+        <item>2B</item>
+    </string-array>
+
+    <string-array name="grupos_prog_vesp">
+        <item>3A</item>
+        <item>3B</item>
+    </string-array>
 
 </resources>
