@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+   <item
+       android:id="@+id/ItemAjustes"
+       android:title="@string/ajustes"/>
+
+    <item
+        android:id="@+id/ItemAyuda"
+        android:title="@string/ayuda"/>
+    <item
+        android:id="@+id/ItemMisReservas"
+        android:title="@string/mis_reservas"/>
+
+</menu>

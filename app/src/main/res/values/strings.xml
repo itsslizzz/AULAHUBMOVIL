@@ -21,4 +21,13 @@
     <string name="materia">Materia</string>
     <string name="grupo">Grupo</string>
     <string name="btnSignOut">Cerrar sesion</string>
+    <string name="Seleccionar_aula_admin">Seleccionar aula</string>
+    <string name="foto_de_perfil">Foto de perfil</string>
+    <string name="notificaciones">Notificaciones</string>
+    <string name="menu">Menú</string>
+    <string name="LogOut">Cerrar sesion</string>
+    <string name="mis_reservas">Mis reservas</string>
+    <string name="ayuda">Ayuda</string>
+    <string name="ajustes">Ajustes</string>
+    <string name="Change_password_text">Cambiar contraseña</string>
 </resources>

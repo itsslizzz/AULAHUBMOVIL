@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ItemShowEmail"
+        android:title="@string/showEmail" />
+    <item
+        android:id="@+id/ItemChangePassword"
+        android:title="@string/Change_password_text" />
+    <item
+        android:id="@+id/ItemLogOut"
+        android:title="@string/LogOut" />
+</menu>
