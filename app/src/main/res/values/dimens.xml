@@ -5,4 +5,5 @@
     <dimen name="Margin_height_35dp">35dp</dimen>
     <dimen name="Margin_End_10dp">10dp</dimen>
     <dimen name="padding_8dp">8dp</dimen>
+    <dimen name="padding_16dp">16dp</dimen>
 </resources>

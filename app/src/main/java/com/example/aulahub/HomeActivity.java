@@ -11,6 +11,7 @@ import android.widget.ImageButton;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 
+
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
@@ -24,8 +25,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
-import java.util.ArrayList;
-import java.util.List;
+
 
 public class HomeActivity extends AppCompatActivity {
 
@@ -46,8 +46,42 @@ public class HomeActivity extends AppCompatActivity {
         });
 
         //instanciar las variables
+        CardView mCardAulaA = findViewById(R.id.card_aulaA);
+        CardView mCardAulaB = findViewById(R.id.card_aulaB);
+        CardView mCardAulaC = findViewById(R.id.card_aulaC);
+        CardView mAuditorio = findViewById(R.id.card_auditorio);
          ImageButton mImageButton = findViewById(R.id.IbtnMenu);
          String uid = mAuth.getCurrentUser().getUid();
+
+
+         // primero definimos el listener para que sea mas limpio
+        View.OnClickListener irAula_Horario = new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(HomeActivity.this, Aula_HorarioActivity.class);
+
+                //obtener que cardview se toco
+                int id = v.getId();
+
+                if (id == R.id.card_aulaA) {
+                    intent.putExtra("CardSeleccionada", "Aula A");
+                } else if (id == R.id.card_aulaB) {
+                    intent.putExtra("CardSeleccionada", "Aula B");
+                } else if (id == R.id.card_aulaC) {
+                    intent.putExtra("CardSeleccionada", "Aula C");
+                } else if (id == R.id.card_auditorio) {
+                    intent.putExtra("CardSeleccionada", "Auditorio");
+                }
+                startActivity(intent);
+                finish();
+            }
+        };
+        // despues lo asignamos a las variables
+        mCardAulaA.setOnClickListener(irAula_Horario);
+        mCardAulaB.setOnClickListener(irAula_Horario);
+        mCardAulaC.setOnClickListener(irAula_Horario);
+        mAuditorio.setOnClickListener(irAula_Horario);
+
 
          //inicializar el popup menu
         PopupMenu popupMenu = new PopupMenu(this,mImageButton);
