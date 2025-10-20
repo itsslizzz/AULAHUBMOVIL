@@ -45,4 +45,9 @@
     <string name="_3_00_4_00">3:00-4:00</string>
     <string name="_4_00_5_00">4:00-5:00</string>
     <string name="_5_00_6_00">5:00-6:00</string>
+    <string name="registrar_reserva">Registrar Reserva</string>
+    <string name="guardar">Guardar</string>
+    <string name="salon">Salón</string>
+    <string name="motivo">Motivo</string>
+    <string name="nombre_del_maestro">Nombre del maestro</string>
 </resources>
