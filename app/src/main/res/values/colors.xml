@@ -2,6 +2,6 @@
 <resources>
     <color name="black">#FF000000</color>
     <color name="white">#FFFFFFFF</color>
-    <color name="Azul_Fic">#0431DA</color>
-    <color name="Cafe_Fic">#985F03</color>
+    <color name="Azul_Fic">#001b39</color>
+    <color name="Cafe_Fic">#bc8736</color>
 </resources>

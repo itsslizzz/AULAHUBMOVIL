@@ -50,19 +50,19 @@ public class LoginActivity extends AppCompatActivity {
         mButtonSign.setOnClickListener(new View.OnClickListener(){
             @Override
             public void onClick(View view){
-             Email = mEditTextEmail.getText().toString();
-             Password = mEditTextpassword.getText().toString();
+                Email = mEditTextEmail.getText().toString();
+                Password = mEditTextpassword.getText().toString();
 
-             if(!Email.isEmpty() && !Password.isEmpty()){
-               
-                 loginUser();
-             }
-             else {
-                 Toast.makeText(LoginActivity.this, "Complete los campos", Toast.LENGTH_SHORT).show();
-             }
-            
+                if(!Email.isEmpty() && !Password.isEmpty()){
+
+                    loginUser();
+                }
+                else {
+                    Toast.makeText(LoginActivity.this, "Complete los campos", Toast.LENGTH_SHORT).show();
+                }
+
             }
-       });
+        });
     }
 
     private void loginUser(){
@@ -86,7 +86,7 @@ public class LoginActivity extends AppCompatActivity {
 
         if(mAuth.getCurrentUser() != null){
             startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-             finish();
+            finish();
         }
     }
 }

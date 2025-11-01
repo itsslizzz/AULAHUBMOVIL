@@ -50,4 +50,6 @@
     <string name="salon">Salón</string>
     <string name="motivo">Motivo</string>
     <string name="nombre_del_maestro">Nombre del maestro</string>
+    <string name="turno">Tuno</string>
+    <string name="continuar">Continuar</string>
 </resources>

@@ -11,18 +11,34 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AULAHUB">
-        <activity android:name=".HomeActivity" />
-        <activity android:name=".CalendarioActivity" />
-        <activity android:name=".Aula_HorarioActivity" />
+
+        <!-- Pantalla inicial -->
         <activity
-            android:name=".LoginActivity"
+            android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
+        <!-- Pantallas secundarias -->
+        <activity
+            android:name=".reservas"
+            android:exported="false" />
+
+        <activity
+            android:name=".CalendarioActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".Aula_HorarioActivity"
+            android:exported="false" />
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="false" />
+
     </application>
 
 </manifest>

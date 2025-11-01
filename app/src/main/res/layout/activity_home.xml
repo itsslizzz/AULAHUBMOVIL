@@ -58,7 +58,6 @@
         android:id="@+id/tv_seleccionar_aula"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/seleccion_aula"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="80dp"
