@@ -1,36 +1,65 @@
 package com.example.aulahub;
 
+
+
+import android.app.Activity;
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
+import androidx.activity.result.ActivityResultLauncher;
+import androidx.activity.result.contract.ActivityResultContracts;
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
+
+import com.bumptech.glide.Glide;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.FirebaseApp;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.DocumentSnapshot;
-import com.google.firebase.firestore.FirebaseFirestore;
 
-public class HomeActivity extends AppCompatActivity {
+import com.google.firebase.firestore.FieldValue;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.SetOptions;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
+
+import java.util.HashMap;
+import java.util.Map;
+
+
+public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
+
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
+    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.activity_home);
+        ImageButton mImageButton = findViewById(R.id.IbtnMenu);
+        ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
+
+        inicializarToolbar(mFotoPerfil, mImageButton);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.home), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -38,12 +67,13 @@ public class HomeActivity extends AppCompatActivity {
             return insets;
         });
 
+
+
         // Instanciar las variables
         CardView mCardAulaA = findViewById(R.id.card_aulaA);
         CardView mCardAulaB = findViewById(R.id.card_aulaB);
         CardView mCardAulaC = findViewById(R.id.card_aulaC);
         CardView mAuditorio = findViewById(R.id.card_auditorio);
-        ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         String uid = mAuth.getCurrentUser().getUid();
 
         // -------------------------------------
@@ -78,70 +108,12 @@ public class HomeActivity extends AppCompatActivity {
             }
         };
 
+
         // Asignar el listener a cada card
         mCardAulaA.setOnClickListener(irAula_Horario);
         mCardAulaB.setOnClickListener(irAula_Horario);
         mCardAulaC.setOnClickListener(irAula_Horario);
         mAuditorio.setOnClickListener(irAula_Horario);
-
-        // -------------------------------------
-        // BLOQUE DEL MENÚ POPUP
-        // -------------------------------------
-        PopupMenu popupMenu = new PopupMenu(this, mImageButton);
-        popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
-
-        popupMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-            @Override
-            public boolean onMenuItemClick(MenuItem item) {
-                int id = item.getItemId();
-                if (id == R.id.ItemAjustes) {
-                    PopupMenu subMenu = new PopupMenu(HomeActivity.this, mImageButton);
-                    subMenu.getMenuInflater().inflate(R.menu.submenu_ajuste, subMenu.getMenu());
-
-                    // Mostrar correo del usuario autenticado
-                    FirebaseUser currentUser = mAuth.getCurrentUser();
-                    if (currentUser != null) {
-                        String email = currentUser.getEmail();
-                        MenuItem emailItem = subMenu.getMenu().findItem(R.id.ItemShowEmail);
-                        emailItem.setTitle(email);
-                    }
-
-                    subMenu.setOnMenuItemClickListener(new PopupMenu.OnMenuItemClickListener() {
-                        @Override
-                        public boolean onMenuItemClick(MenuItem subitem) {
-                            int subId = subitem.getItemId();
-                            if (subId == R.id.ItemShowEmail) {
-                                return true;
-                            } else if (subId == R.id.ItemChangePassword) {
-                                return true;
-                            } else if (subId == R.id.ItemLogOut) {
-                                mAuth.signOut();
-                                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                                finish();
-                                return true;
-                            }
-                            return false;
-                        }
-                    });
-
-                    subMenu.show();
-
-                } else if (id == R.id.ItemAyuda) {
-                    return true;
-                } else if (id == R.id.ItemMisReservas) {
-                    return true;
-                }
-                return false;
-            }
-        });
-
-        // Evento para mostrar el menú hamburguesa
-        mImageButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                popupMenu.show();
-            }
-        });
 
         // -------------------------------------
         // BLOQUE DE FIRESTORE (ROLES)
@@ -200,3 +172,12 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 }
+
+
+
+
+
+
+
+
+

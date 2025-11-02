@@ -7,57 +7,14 @@
     android:layout_height="match_parent"
     tools:context=".HomeActivity">
 
-    <com.google.android.material.appbar.AppBarLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:background="@color/white"
-        android:elevation="4dp"
-        tools:ignore="MissingConstraints">
-
-        <androidx.appcompat.widget.Toolbar
-            android:id="@+id/toolbar"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            app:popupTheme="@style/ThemeOverlay.AppCompat.Light">
-
-            <ImageButton
-                android:id="@+id/IbtnMenu"
-                android:layout_width="@dimen/Margin_Widht_40dp"
-                android:layout_height="@dimen/Margin_height_35dp"
-                android:layout_marginStart="@dimen/Margin_Start_10dp"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/menu"
-                android:src="@drawable/ic_menu" />
-
-            <ImageButton
-                android:id="@+id/IbtnNotificaciones"
-                android:layout_width="@dimen/Margin_Widht_40dp"
-                android:layout_height="@dimen/Margin_height_35dp"
-                android:layout_gravity="center"
-                android:background="?attr/selectableItemBackgroundBorderless"
-                android:contentDescription="@string/notificaciones"
-                android:src="@drawable/ic_notificaciones" />
-
-            <com.google.android.material.imageview.ShapeableImageView
-                android:id="@+id/btnPerfil"
-                android:layout_width="@dimen/Margin_Widht_40dp"
-                android:layout_height="@dimen/Margin_height_35dp"
-                android:layout_gravity="end"
-                android:layout_marginEnd="@dimen/Margin_End_10dp"
-                android:contentDescription="@string/foto_de_perfil"
-                android:src="@drawable/ic_perfil"
-                app:shapeAppearanceOverlay="@style/CircularImage"
-                android:scaleType="centerCrop"/>
-
-        </androidx.appcompat.widget.Toolbar>
-
-    </com.google.android.material.appbar.AppBarLayout>
+    <include layout="@layout/activity_toolbar"/>
 
 
     <TextView
         android:id="@+id/tv_seleccionar_aula"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:text="@string/seleccion_aula"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
         android:layout_marginTop="80dp"
