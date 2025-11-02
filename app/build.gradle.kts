@@ -1,3 +1,8 @@
+import org.gradle.kotlin.dsl.annotationProcessor
+import org.gradle.kotlin.dsl.implementation
+
+
+
 plugins {
     alias(libs.plugins.android.application)
     id("com.google.gms.google-services")
@@ -36,20 +41,26 @@ dependencies {
      //BomMde Firebase: fija versiones de todos  los modulos de Firebase
     implementation(platform(libs.firebase.bom))
 
-    //Módulos Firebase SIN version (lo pone el BoM
+    //Módulos Firebase SIN version lo pone el BoM
     implementation(libs.firebase.analytics)
     implementation(libs.firebase.auth)
 
     // Implementacion de la base de datos
     implementation(libs.firebase.firestore)
 
+    //Implementacion de FirebaseStorage
+    implementation(libs.firebase.storage)
+
+
     // AndroidX y tests
     implementation(libs.appcompat)
     implementation(libs.material)
     implementation(libs.activity)
     implementation(libs.constraintlayout)
-    implementation("com.google.android.material:material:1.12.0")
+    implementation("com.google.android.material:material:1.13.0")
 
+    implementation ("com.github.bumptech.glide:glide:4.16.0")
+    annotationProcessor ("com.github.bumptech.glide:compiler:4.16.0")
 
     testImplementation(libs.junit)
     androidTestImplementation(libs.ext.junit)

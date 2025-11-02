@@ -5,6 +5,7 @@ import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -29,7 +30,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Set;
 
-public class reservas extends AppCompatActivity {
+public class reservas extends com.example.aulahub.utils.ToolbarManager {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
@@ -39,6 +40,10 @@ public class reservas extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_reservas);
+        ImageButton mImageButton = findViewById(R.id.IbtnMenu);
+        ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
+
+        inicializarToolbar(mFotoPerfil, mImageButton);
 
         // --- Referencias ---
         Spinner spTurno = findViewById(R.id.spTurno);

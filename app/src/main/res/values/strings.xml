@@ -52,4 +52,7 @@
     <string name="nombre_del_maestro">Nombre del maestro</string>
     <string name="turno">Tuno</string>
     <string name="continuar">Continuar</string>
+    <string name="subir_foto">Subir foto</string>
+    <string name="elegir_foto">Elegir foto</string>
+    <string name="borrar_foto">Borrar foto</string>
 </resources>
