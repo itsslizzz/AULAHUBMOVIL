@@ -16,6 +16,7 @@ import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 
 import com.bumptech.glide.Glide;
+import com.example.aulahub.AyudaActivity;
 import com.example.aulahub.LoginActivity;
 import com.example.aulahub.R;
 import com.google.firebase.auth.FirebaseAuth;
@@ -75,7 +76,9 @@ public class ToolbarManager extends AppCompatActivity {
 
             if (id == R.id.ItemAjustes) {
                 mostrarSubmenuAjustes(email);
+                return true;
             }else if (id == R.id.ItemAyuda) {
+                startActivity(new Intent(this, AyudaActivity.class));
                 return true;
             }else if (id == R.id.ItemMisReservas) {
                 return true;

@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="guia_rapida">Guia Rapida</string>
+    <string name="Estado_reservas">Estado de la reserva</string>
+    <string name="Modificar">Modificar o cancelar una reserva</string>
+    <string name="Reglas">Reglas básicas</string>
+    <string name="Perfil">Perfil</string>
+    <string name="Problemas">Problemas comunes</string>
+    <string name="Privacidad">Privacidad</string>
+    <string name="Contacto">Contacto</string>
+
+
+    <string name="GuiaDetalles">"\n1. Entra a 'Nueva reserva'.
+        \n2. Elige el aula, salón, fecha y horario.
+        \n3. Escribe el grupo.
+        \n4. Confirma la reserva.
+        \n5. Consulta tus reservas en 'Mis reservas'."
+    </string>
+
+    <string name="ReservasDetalles">"\n1. Pendiente: la reserva fue enviada y está esperando aprobación.
+        \n2. Aceptada: la reserva fue aprobada por el administrador.
+        \n3. Rechazada: la reserva no fue aprobada. Revisa el motivo en los detalles."
+    </string>
+
+    <string name="ModificarDetalles">"\n1. Mientras la reserva esté en estado pendiente, puedes editarla o cancelarla.
+        \n2. Si ya fue aceptada, deberás comunicarte con el administrador para hacer cambios."
+    </string>
+
+    <string name="MisreservasDetalles">Aquí se muestran solo tus reservas, ordenadas por fecha y hora.
+         Toca cualquiera para ver los detalles y el estado actual.
+    </string>
+
+    <string name="ReglasDetalles">"\n1. Los horarios y límites de uso dependen de tu institución.
+        \n2. Las reservas se aprueban únicamente por el administrador del aula asignada.
+        \n3. No puedes ver ni modificar reservas hechas por otras personas."
+    </string>
+
+    <string name="PerfilDetalles">"\n1.Subir foto: desde el menú selecciona “Subir foto”
+        \n2. Borrar foto: entra al menú y elige “Borrar foto”."
+    </string>
+
+    <string name="ProblemasDetalles">"\n1. Permiso denegado → Cierra sesión y vuelve a entrar. Si continúa, tu rol no tiene acceso.
+        \n2. Fallo al guardar → Verifica que los datos estén completos y la fecha sea válida.
+        \n3. Choque de horario → Cambia a un horario disponible.
+        \n4. La pantalla no carga → Revisa tu conexión a internet o reinicia la aplicación.
+    </string>
+
+    <string name="PrivacidadDetalles">Tus datos se utilizan únicamente para administrar tus reservas y mostrar tu
+        información personal dentro de la aplicación.
+    </string>
+
+    <string name="ContactoDetalles">Si necesitas ayuda, escribe a soporte de tu escuela con el asunto “AulaHub”.
+          la versión de la app, la fecha y hora del problema, y una captura de pantalla si es posible.
+    </string>
+
+</resources>
