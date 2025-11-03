@@ -11,6 +11,7 @@ constraintlayout = "2.2.1"
 firebaseDatabase = "22.0.1"
 firebaseStorage = "22.0.1"
 materialVersion = "1.12.0"
+cardview = "1.0.0"
 
 [libraries]
 firebase-analytics = { module = "com.google.firebase:firebase-analytics" }
@@ -29,6 +30,7 @@ constraintlayout = { group = "androidx.constraintlayout", name = "constraintlayo
 firebase-database = { group = "com.google.firebase", name = "firebase-database", version.ref = "firebaseDatabase" }
 firebase-storage = { group = "com.google.firebase", name = "firebase-storage", version.ref = "firebaseStorage" }
 material-v1120 = { module = "com.google.android.material:material", version.ref = "materialVersion" }
+cardview = { group = "androidx.cardview", name = "cardview", version.ref = "cardview" }
 
 [plugins]
 android-application = { id = "com.android.application", version.ref = "agp" }

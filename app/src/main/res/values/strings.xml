@@ -55,4 +55,12 @@
     <string name="subir_foto">Subir foto</string>
     <string name="elegir_foto">Elegir foto</string>
     <string name="borrar_foto">Borrar foto</string>
+    <string name="reserva_registrada_correctamente">Reserva registrada correctamente</string>
+    <string name="materiaa">Materia:</string>
+    <string name="salonn">Salon:</string>
+    <string name="grupoo">Grupo:</string>
+    <string name="fechas">Fechas:</string>
+    <string name="horarios">Horarios:</string>
+    <string name="ver_mis_reservas">Ver mis reservas</string>
+    <string name="turnoo">Turno:</string>
 </resources>

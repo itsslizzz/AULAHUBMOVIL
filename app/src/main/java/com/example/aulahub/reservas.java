@@ -29,6 +29,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Locale;
 import java.util.Set;
+import java.util.Map;
+import java.util.HashMap;
+import android.content.Intent;
 
 public class reservas extends com.example.aulahub.utils.ToolbarManager {
 
@@ -224,7 +227,7 @@ public class reservas extends com.example.aulahub.utils.ToolbarManager {
                 calendar.add(Calendar.DAY_OF_MONTH, 1);
                 String fin = sdf.format(calendar.getTime());
 
-                tvFechasSeleccionadas.setText("Fechas seleccionadas: " + inicio + " a " + fin);
+                tvFechasSeleccionadas.setText( inicio + " a " + fin);
                 tvFechasSeleccionadas.setVisibility(View.VISIBLE);
                 tvHorarios.setVisibility(View.VISIBLE);
 
@@ -244,6 +247,54 @@ public class reservas extends com.example.aulahub.utils.ToolbarManager {
                 btn_Reservar.setVisibility(View.VISIBLE);
             });
         });
+
+
+        // --- NUEVO BLOQUE: Guardar reserva en Firestore ---
+        btn_Reservar.setOnClickListener(v -> {
+            Log.d("Reservas", "Botón Reservar presionado");
+
+            String turnoSeleccionado = spTurno.getSelectedItem().toString();
+            String materiaSeleccionada = spMateria.getSelectedItem().toString();
+            String grupoSeleccionado = spAula.getSelectedItem().toString();
+            String aulaSeleccionada = tvRoomName.getText().toString();
+            String profesorID = mAuth.getCurrentUser().getUid();
+            String fechasSeleccionadas = tvFechasSeleccionadas.getText().toString();
+
+
+            Map<String, Object> reserva = new HashMap<>();
+            reserva.put("profesorID", profesorID);
+            reserva.put("materia", materiaSeleccionada);
+            reserva.put("grupo", grupoSeleccionado);
+            reserva.put("aula", aulaSeleccionada);
+            reserva.put("turno", turnoSeleccionado);
+            reserva.put("fechas", fechasSeleccionadas);
+            reserva.put("horariosSeleccionados", horariosSeleccionados);
+            reserva.put("timestamp", new Date());
+
+            mFirestore.collection("reservas")
+                    .add(reserva)
+                    .addOnSuccessListener(docRef -> {
+                        Log.d("Reservas", "Reserva guardada con ID: " + docRef.getId());
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("Reservas", "Error guardando reserva", e);
+                    });
+
+            Intent intent = new Intent(reservas.this, ConfirmacionActivity.class);
+            intent.putExtra("materia", materiaSeleccionada);
+            intent.putExtra("aula", aulaSeleccionada);
+            intent.putExtra("grupo", grupoSeleccionado);
+            intent.putExtra("turno", turnoSeleccionado);
+            intent.putExtra("fechas", fechasSeleccionadas);
+            intent.putStringArrayListExtra("horarios", new ArrayList<>(horariosSeleccionados));
+
+            startActivity(intent);
+
+        });
+
+
+
+
     }
 }
 
