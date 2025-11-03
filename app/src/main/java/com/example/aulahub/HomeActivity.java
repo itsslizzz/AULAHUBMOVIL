@@ -49,7 +49,6 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
-    private FirebaseStorage mStorage = FirebaseStorage.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
