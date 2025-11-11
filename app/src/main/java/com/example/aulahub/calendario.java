@@ -34,8 +34,6 @@ import android.content.Intent;
 
 public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
     private Spinner spMateria, spAula;
 
     @Override
@@ -81,8 +79,6 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         int imagen = getIntent().getIntExtra("imagen", 0);
         if (imagen != 0) imgAula.setImageResource(imagen);
 
-        // --- FIREBASE ---
-        String uid = mAuth.getCurrentUser().getUid();
 
         // 1️⃣ Obtener materias del profesor
         mFirestore.collection("profesores")

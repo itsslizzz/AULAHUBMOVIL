@@ -10,10 +10,5 @@
     <item
         android:id="@+id/ItemMisReservas"
         android:title="@string/mis_reservas"/>
-    <item
-        android:id="@+id/ItemSubirFoto"
-        android:title="@string/subir_foto"/>
-    <item
-        android:id="@+id/ItemBorrarFoto"
-        android:title="@string/borrar_foto"/>
+
 </menu>
