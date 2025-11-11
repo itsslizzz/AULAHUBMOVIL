@@ -12,9 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AULAHUB">
         <activity
-            android:name=".ConfirmacionActivity"
+            android:name=".MisReservas"
             android:exported="false" />
-        <!-- Pantalla inicial -->
+        <activity
+            android:name=".ConfirmacionActivity"
+            android:exported="false" /> <!-- Pantalla inicial -->
         <activity
             android:name=".HomeActivity"
             android:exported="true">
@@ -25,11 +27,16 @@
             </intent-filter>
         </activity> <!-- Pantallas secundarias -->
         <activity
-            android:name=".reservas"
+            android:name=".calendario"
             android:exported="false" />
         <activity
             android:name=".LoginActivity"
             android:exported="false" />
+        <activity
+            android:name=".AyudaActivity"
+            android:exported="false" />
+
+
     </application>
 
 </manifest>

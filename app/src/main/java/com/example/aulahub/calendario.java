@@ -12,7 +12,6 @@ import android.widget.TextView;
 import android.widget.HorizontalScrollView;
 import android.widget.Button;
 
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.content.ContextCompat;
 import androidx.core.util.Pair;
 
@@ -33,7 +32,7 @@ import java.util.Map;
 import java.util.HashMap;
 import android.content.Intent;
 
-public class reservas extends com.example.aulahub.utils.ToolbarManager {
+public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
     private FirebaseAuth mAuth = FirebaseAuth.getInstance();
     private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
@@ -42,7 +41,7 @@ public class reservas extends com.example.aulahub.utils.ToolbarManager {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_reservas);
+        setContentView(R.layout.activity_calendario);
         ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
@@ -141,7 +140,7 @@ public class reservas extends com.example.aulahub.utils.ToolbarManager {
                             if (grupos.isEmpty()) grupos.add("Sin grupos disponibles");
 
                             ArrayAdapter<String> adapterGrupo = new ArrayAdapter<>(
-                                    reservas.this,
+                                    calendario.this,
                                     android.R.layout.simple_spinner_item,
                                     grupos
                             );
@@ -270,6 +269,7 @@ public class reservas extends com.example.aulahub.utils.ToolbarManager {
             reserva.put("fechas", fechasSeleccionadas);
             reserva.put("horariosSeleccionados", horariosSeleccionados);
             reserva.put("timestamp", new Date());
+            reserva.put("status", "Pendiente");
 
             mFirestore.collection("reservas")
                     .add(reserva)
@@ -280,7 +280,7 @@ public class reservas extends com.example.aulahub.utils.ToolbarManager {
                         Log.e("Reservas", "Error guardando reserva", e);
                     });
 
-            Intent intent = new Intent(reservas.this, ConfirmacionActivity.class);
+            Intent intent = new Intent(calendario.this, ConfirmacionActivity.class);
             intent.putExtra("materia", materiaSeleccionada);
             intent.putExtra("aula", aulaSeleccionada);
             intent.putExtra("grupo", grupoSeleccionado);

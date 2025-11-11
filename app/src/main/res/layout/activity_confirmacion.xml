@@ -267,6 +267,7 @@
         </androidx.cardview.widget.CardView>
 
         <Button
+            android:id="@+id/ir_a_reservas"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/ver_mis_reservas"

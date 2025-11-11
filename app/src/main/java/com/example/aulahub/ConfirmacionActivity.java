@@ -2,6 +2,7 @@ package com.example.aulahub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.activity.EdgeToEdge;
@@ -58,5 +59,14 @@ public class ConfirmacionActivity extends AppCompatActivity {
                 tvHorarios.setText("No seleccionados");
             }
         }
+
+        //Encontrar el boton para ir a el apartado de mis reservas
+        Button ir_a_reservas=findViewById(R.id.ir_a_reservas);
+        ir_a_reservas.setOnClickListener(v ->{
+
+            Intent misreservas= new Intent(ConfirmacionActivity.this, MisReservas.class);
+            startActivity(misreservas);
+            finish();
+        });
     }
 }
