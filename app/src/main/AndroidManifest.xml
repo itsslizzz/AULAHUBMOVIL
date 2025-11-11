@@ -16,7 +16,8 @@
             android:exported="false" />
         <activity
             android:name=".ConfirmacionActivity"
-            android:exported="false" /> <!-- Pantalla inicial -->
+            android:exported="false" />
+        <!-- Pantalla inicial -->
         <activity
             android:name=".HomeActivity"
             android:exported="true">
@@ -35,7 +36,9 @@
         <activity
             android:name=".AyudaActivity"
             android:exported="false" />
-
+        <activity
+            android:name=".utils.ToolbarManager"
+            android:exported="false" />
 
     </application>
 
