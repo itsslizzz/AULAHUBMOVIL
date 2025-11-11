@@ -76,8 +76,15 @@ public class ToolbarManager extends AppCompatActivity {
                     }
                 });
 
+
         PopupMenu popupMenu = new PopupMenu(this, mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
+
+        boolean isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        if (isAdmin){
+            popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
+        }
 
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();

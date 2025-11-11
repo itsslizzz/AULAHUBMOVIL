@@ -16,6 +16,7 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 
+import com.example.aulahub.utils.ToolbarManager;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -23,9 +24,9 @@ import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 
 
-public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
+public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
-
+    private boolean isAdmin = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -64,6 +65,7 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             @Override
             public void onClick(View v) {
                 Intent intent = new Intent(HomeActivity.this, calendario.class);
+                Intent exportarToToolbar = new Intent(HomeActivity.this, ToolbarManager.class);
 
                 int id = v.getId();
 
@@ -84,7 +86,8 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     intent.putExtra("modulo", "Módulo 2");
                     intent.putExtra("imagen", R.drawable.auditorio);
                 }
-
+                intent.putExtra("isAdmin", isAdmin);
+                exportarToToolbar.putExtra("isAdmin", isAdmin);
                 startActivity(intent);
             }
         };
@@ -104,7 +107,10 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     @Override
                     public void onSuccess(DocumentSnapshot documentSnapshot) {
                         if (documentSnapshot.exists()) {
-                            Boolean isAdmin = documentSnapshot.getBoolean("admin");
+                            Boolean adminDb = documentSnapshot.getBoolean("admin");
+
+                            isAdmin = Boolean.TRUE.equals(adminDb);
+
                             String Aula = documentSnapshot.getString("Aula");
                             aplicarRestricciones(isAdmin, Aula);
                         } else {
@@ -116,7 +122,7 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                 });
     }
 
-    private void aplicarRestricciones(Boolean isAdmin, String Aula) {
+    private void aplicarRestricciones(boolean isAdmin, String Aula) {
         CardView mCardAulaA = findViewById(R.id.card_aulaA);
         CardView mCardAulaB = findViewById(R.id.card_aulaB);
         CardView mCardAulaC = findViewById(R.id.card_aulaC);
