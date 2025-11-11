@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item
+        android:id="@+id/ItemSubirFoto"
+        android:title="@string/subir_foto"/>
+    <item
+        android:id="@+id/ItemBorrarFoto"
+        android:title="@string/borrar_foto"/>
+</menu>

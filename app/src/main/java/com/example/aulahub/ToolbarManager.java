@@ -39,6 +39,11 @@ public class ToolbarManager extends AppCompatActivity {
     protected ImageView mFotoPerfil;
     protected ImageButton mImageButton;
     private ActivityResultLauncher<Intent> imagePickerLauncher;
+    protected String uid;
+    protected FirebaseUser user;
+
+
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -46,6 +51,8 @@ public class ToolbarManager extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         mFirestore = FirebaseFirestore.getInstance();
         mStorage = FirebaseStorage.getInstance();
+        uid = mAuth.getUid();
+        user = mAuth.getCurrentUser();
     }
 
     protected void inicializarToolbar(ImageView fotoPerfil, ImageButton imageButton) {
@@ -84,14 +91,25 @@ public class ToolbarManager extends AppCompatActivity {
             }else if (id == R.id.ItemMisReservas) {
                 startActivity(new Intent(this, MisReservas.class));
                 return true;
-            } else if (id == R.id.ItemSubirFoto) {
+            }
+            return true;
+        });
+
+        PopupMenu popupPerfil = new PopupMenu(this, mFotoPerfil);
+        popupPerfil.getMenuInflater().inflate(R.menu.perfil_popup, popupPerfil.getMenu());
+
+        popupPerfil.setOnMenuItemClickListener(item ->{
+            int idPerfilpopup = item.getItemId();
+
+            if (idPerfilpopup == R.id.ItemSubirFoto) {
                 imageChooser();
-            }else if (id == R.id.ItemBorrarFoto) {
+            }else if (idPerfilpopup == R.id.ItemBorrarFoto) {
                 BorrarFoto(uid);
             }
             return true;
         });
 
+        mFotoPerfil.setOnClickListener(v -> popupPerfil.show());
         mImageButton.setOnClickListener(v -> popupMenu.show());
     }
 

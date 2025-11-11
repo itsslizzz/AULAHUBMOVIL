@@ -26,8 +26,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
 
-    private FirebaseAuth mAuth = FirebaseAuth.getInstance();
-    private FirebaseFirestore mFirestore = FirebaseFirestore.getInstance();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,6 +35,19 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
+        // Recuperar los CardView
+        CardView mCardAulaA = findViewById(R.id.card_aulaA);
+        CardView mCardAulaB = findViewById(R.id.card_aulaB);
+        CardView mCardAulaC = findViewById(R.id.card_aulaC);
+        CardView mAuditorio = findViewById(R.id.card_auditorio);
+
+        if (user == null){
+            Intent intent =  new Intent(this, LoginActivity.class);
+            startActivity(intent);
+            finish();
+            return;
+        }
+
         inicializarToolbar(mFotoPerfil, mImageButton);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.home), (v, insets) -> {
@@ -45,14 +56,6 @@ public  class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             return insets;
         });
 
-
-
-        // Instanciar las variables
-        CardView mCardAulaA = findViewById(R.id.card_aulaA);
-        CardView mCardAulaB = findViewById(R.id.card_aulaB);
-        CardView mCardAulaC = findViewById(R.id.card_aulaC);
-        CardView mAuditorio = findViewById(R.id.card_auditorio);
-        String uid = mAuth.getCurrentUser().getUid();
 
         // -------------------------------------
         // BLOQUE DE EVENTO DE LAS CARDS
