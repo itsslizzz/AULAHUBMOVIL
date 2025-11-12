@@ -27,6 +27,31 @@
             android:backgroundTint="@color/black"
             android:layout_marginBottom="4dp" />
 
+        <!-- NOMBRE MAESTRO -->
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
+
+            <TextView
+                android:layout_width="0dp"
+                android:layout_height="wrap_content"
+                android:layout_weight="1"
+                android:text="@string/maestro"
+                android:textStyle="bold"
+                android:textSize="14sp" />
+
+            <TextView
+                android:id="@+id/tv_maestro"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=""
+                android:textSize="14sp"
+                android:textColor="@color/black" />
+        </LinearLayout>
+
         <!-- Materia -->
         <LinearLayout
             android:layout_width="match_parent"
@@ -147,6 +172,34 @@
                 android:textSize="14sp"
                 android:textColor="@color/black" />
         </LinearLayout>
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:paddingVertical="4dp">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/margin_20dp"
+            android:text="@string/aceptar"
+            android:textSize="15sp"
+            android:textStyle="italic"
+
+            android:backgroundTint="@color/Aceptar"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="70dp"
+            android:text="@string/rechazar"
+            android:textSize="15sp"
+            android:textStyle="italic"
+            android:backgroundTint="@color/Rechazar"/>
+
 
     </LinearLayout>
+
+    </LinearLayout>
+
 </androidx.cardview.widget.CardView>

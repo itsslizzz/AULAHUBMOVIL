@@ -12,12 +12,20 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AULAHUB">
         <activity
+            android:name=".solicitudes_aceptadas"
+            android:exported="false" />
+        <activity
+            android:name=".solicitudes_rechazadas"
+            android:exported="false" />
+        <activity
+            android:name=".solicitudes_pendientes"
+            android:exported="false"></activity>
+        <activity
             android:name=".MisReservas"
             android:exported="false" />
         <activity
             android:name=".ConfirmacionActivity"
-            android:exported="false" />
-        <!-- Pantalla inicial -->
+            android:exported="false" /> <!-- Pantalla inicial -->
         <activity
             android:name=".HomeActivity"
             android:exported="true">
@@ -39,7 +47,6 @@
         <activity
             android:name=".utils.ToolbarManager"
             android:exported="false" />
-
     </application>
 
 </manifest>

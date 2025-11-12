@@ -210,30 +210,30 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             actualizarSemana(tlSemana, tvRangoSemana, tvFechasSeleccionadas, horariosSeleccionados, horasTurno);
         });
 
-            // --- Botón Continuar: mostrar calendario semanal ---
-            btnContinuar.setOnClickListener(v -> {
-                // limpiar selección anterior
-                horariosSeleccionados.clear();
-                tvFechasSeleccionadas.setText("");
-                tvFechasSeleccionadas.setVisibility(View.GONE);
+        // --- Botón Continuar: mostrar calendario semanal ---
+        btnContinuar.setOnClickListener(v -> {
+            // limpiar selección anterior
+            horariosSeleccionados.clear();
+            tvFechasSeleccionadas.setText("");
+            tvFechasSeleccionadas.setVisibility(View.GONE);
 
-                String turnoSeleccionado = spTurno.getSelectedItem().toString();
-                String[] horasTurno = obtenerHorasPorTurno(turnoSeleccionado);
+            String turnoSeleccionado = spTurno.getSelectedItem().toString();
+            String[] horasTurno = obtenerHorasPorTurno(turnoSeleccionado);
 
-                actualizarSemana(tlSemana, tvRangoSemana, tvFechasSeleccionadas, horariosSeleccionados, horasTurno);
+            actualizarSemana(tlSemana, tvRangoSemana, tvFechasSeleccionadas, horariosSeleccionados, horasTurno);
 
 
-                layoutSemana.setVisibility(View.VISIBLE);
+            layoutSemana.setVisibility(View.VISIBLE);
 
-                // los scrolls viejos se quedan ocultos
-                scrollMatutino.setVisibility(View.GONE);
-                scrollVespertino.setVisibility(View.GONE);
+            // los scrolls viejos se quedan ocultos
+            scrollMatutino.setVisibility(View.GONE);
+            scrollVespertino.setVisibility(View.GONE);
 
-                btn_Reservar.setVisibility(View.VISIBLE);
-            });
-         if (isAdmin){
-             btnContinuar.performClick();
-         }
+            btn_Reservar.setVisibility(View.VISIBLE);
+        });
+        if (isAdmin){
+            btnContinuar.performClick();
+        }
 
         // --- Guardar reserva en Firestore ---
         btn_Reservar.setOnClickListener(v -> {
@@ -253,6 +253,9 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             reserva.put("aula", aulaSeleccionada);
             reserva.put("turno", turnoSeleccionado);
             reserva.put("fechas", fechasSeleccionadas);
+            reserva.put("status", "Pendiente");
+
+
             // esta condiccion sirve para que el usuario elija una hora para que pueda reservar
             if (fechasSeleccionadas.isEmpty()){
                 Toast.makeText(this, "Selecciona un horario", Toast.LENGTH_SHORT).show();

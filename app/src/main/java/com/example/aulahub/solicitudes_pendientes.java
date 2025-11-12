@@ -1,12 +1,17 @@
 package com.example.aulahub;
 
 import android.os.Bundle;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 
+import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.graphics.Insets;
+import androidx.core.view.ViewCompat;
+import androidx.core.view.WindowInsetsCompat;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
@@ -15,71 +20,88 @@ import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.List;
 
-public class MisReservas extends AppCompatActivity {
+public class solicitudes_pendientes extends AppCompatActivity {
 
     private FirebaseFirestore db;
     private FirebaseAuth mAuth;
-    private LinearLayout containerReservas;
+    private LinearLayout containerSolicitudes;
     private TextView tvVacio;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_mis_reservas);
+        EdgeToEdge.enable(this);
+        setContentView(R.layout.activity_solicitudes_pendientes);
 
+        // Ajuste visual
+        ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
+            Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
+            v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
+            return insets;
+        });
+
+        // Inicializar Firebase y vistas
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
-
-        containerReservas = findViewById(R.id.container_reservas);
+        containerSolicitudes = findViewById(R.id.container_solicitudes);
         tvVacio = findViewById(R.id.tv_vacio);
 
-        cargarReservas();
+        cargarSolicitudes();
     }
 
-    private void cargarReservas() {
-        String uid = mAuth.getCurrentUser().getUid();
-
+    private void cargarSolicitudes() {
         db.collection("reservas")
-                .whereEqualTo("profesorID", uid)
+                .whereEqualTo("status", "Pendiente") // solo pendientes
                 .get()
-                .addOnSuccessListener(this::mostrarReservas)
-                .addOnFailureListener(e -> e.printStackTrace());
+                .addOnSuccessListener(this::mostrarSolicitudes)
+                .addOnFailureListener(Throwable::printStackTrace);
     }
 
-    private void mostrarReservas(QuerySnapshot querySnapshot) {
+    private void mostrarSolicitudes(QuerySnapshot querySnapshot) {
         LayoutInflater inflater = LayoutInflater.from(this);
-        containerReservas.removeAllViews();
+        containerSolicitudes.removeAllViews();
 
-        // Si no hay reservas → mostrar mensaje vacío
-        if (querySnapshot == null || querySnapshot.isEmpty()) {
+        if (querySnapshot.isEmpty()) {
             tvVacio.setVisibility(View.VISIBLE);
             return;
         } else {
             tvVacio.setVisibility(View.GONE);
         }
 
-        // Mostrar las reservas si existen
         for (DocumentSnapshot doc : querySnapshot) {
-            View cardView = inflater.inflate(R.layout.item_card_reserva, containerReservas, false);
+            View cardView = inflater.inflate(R.layout.item_card_solicitud, containerSolicitudes, false);
 
+            // obtener id
+            String profesorID = doc.getString("profesorID");
+
+            // obtener el nombre a base del ID del profe para poder mostrarlo en el apartado Maestro
+            db.collection("profesores").document(profesorID)
+                    .get()
+                    .addOnSuccessListener(profesorDoc -> {
+                        String nombreProfesor = profesorDoc.getString("Nombre");
+
+                        ((TextView) cardView.findViewById(R.id.tv_maestro)).setText(nombreProfesor != null ? nombreProfesor : "Nombre no disponible");
+                    })
+                    .addOnFailureListener(e -> Log.e("Firestore", "Error al obtener el nombre del maestro", e));
+
+            // Set other information in the card view
             ((TextView) cardView.findViewById(R.id.tv_materia)).setText(doc.getString("materia"));
             ((TextView) cardView.findViewById(R.id.tv_salon)).setText(doc.getString("aula"));
             ((TextView) cardView.findViewById(R.id.tv_turno)).setText(doc.getString("turno"));
             ((TextView) cardView.findViewById(R.id.tv_grupo)).setText(doc.getString("grupo"));
 
+            // Mostrar horas y fechas de mejor manera
             Object horarios = doc.get("horariosSeleccionados");
             TextView tvHorarios = cardView.findViewById(R.id.tv_horarios);
 
             if (horarios instanceof List<?>) {
                 List<?> listaHorarios = (List<?>) horarios;
-
                 StringBuilder horariosTexto = new StringBuilder();
                 for (Object h : listaHorarios) {
                     if (h != null) {
                         horariosTexto.append(h.toString()).append("\n");
                     }
                 }
-
                 tvHorarios.setText(horariosTexto.toString().trim());
             } else {
                 tvHorarios.setText("No hay horarios seleccionados");
@@ -89,8 +111,10 @@ public class MisReservas extends AppCompatActivity {
             String status = doc.getString("status");
             tvStatus.setText(status != null ? status : "Pendiente");
 
-            containerReservas.addView(cardView);
+            // mostrar la card en el layout
+            containerSolicitudes.addView(cardView);
         }
     }
+
 }
 

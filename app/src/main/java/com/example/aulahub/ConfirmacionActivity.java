@@ -33,7 +33,6 @@ public class ConfirmacionActivity extends AppCompatActivity {
         TextView tvSalon = findViewById(R.id.tvSalon);
         TextView tvTurno = findViewById(R.id.tvTurno);
         TextView tvGrupo = findViewById(R.id.tvGrupo);
-        TextView tvFechas = findViewById(R.id.tvFechas);
         TextView tvHorarios = findViewById(R.id.tvhorarios);
 
         // Recupera los datos enviados desde reservas.java
@@ -51,12 +50,17 @@ public class ConfirmacionActivity extends AppCompatActivity {
             if (aula != null) tvSalon.setText(aula);
             if (grupo != null) tvGrupo.setText(grupo);
             if (turno != null) tvTurno.setText(turno);
-            if (fechas != null) tvFechas.setText(fechas);
 
             if (horarios != null && !horarios.isEmpty()) {
-                tvHorarios.setText(String.join(", ", horarios));
+                StringBuilder horariosTexto = new StringBuilder();
+
+                for (String horario : horarios) {
+                    horariosTexto.append(horario).append("\n");
+                }
+
+                tvHorarios.setText(horariosTexto.toString().trim());
             } else {
-                tvHorarios.setText("No seleccionados");
+                tvHorarios.setText("No hay horarios seleccionados");
             }
         }
 

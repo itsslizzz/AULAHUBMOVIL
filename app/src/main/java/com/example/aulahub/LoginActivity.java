@@ -2,6 +2,7 @@ package com.example.aulahub;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.Toast;
@@ -15,10 +16,13 @@ import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.Firebase;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FirebaseFirestore;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -27,6 +31,7 @@ public class LoginActivity extends AppCompatActivity {
     private EditText mEditTextpassword;
     private Button mButtonSign;
     private FirebaseAuth mAuth;
+    private FirebaseFirestore mFirestore;
 
     private String Email = "";
     private String Password = "";
@@ -42,6 +47,7 @@ public class LoginActivity extends AppCompatActivity {
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
+        mFirestore = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         mEditTextEmail = (EditText) findViewById(R.id.ETemail);
         mEditTextpassword = (EditText) findViewById(R.id.ETpassword);
@@ -70,8 +76,32 @@ public class LoginActivity extends AppCompatActivity {
             @Override
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
-                    startActivity(new Intent(LoginActivity.this, HomeActivity.class));
-                    finish();
+
+                    String uid = mAuth.getCurrentUser().getUid();
+
+                    mFirestore.collection("roles").document(uid).get()
+                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
+                                @Override
+                                public void onSuccess(DocumentSnapshot documentSnapshot) {
+                                    if (documentSnapshot.exists()) {
+                                        Boolean adminDb = documentSnapshot.getBoolean("admin");
+
+                                        boolean isAdmin = Boolean.TRUE.equals(adminDb);
+                                        String Aula = documentSnapshot.getString("Aula");
+
+                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                        intent.putExtra("isAdmin", isAdmin);
+                                        intent.putExtra("Aula", Aula);
+                                        startActivity(intent);
+                                        finish();
+
+                                    } else {
+                                        Log.e("Firestore", "No existe el documento");
+                                    }
+                                }
+                            }).addOnFailureListener(e -> {
+                                Log.e("Firestore", "Error al obtener datos: ", e);
+                            });
                 }
                 else{
                     Toast.makeText(LoginActivity.this, "No se pudo iniciar sesion", Toast.LENGTH_SHORT).show();

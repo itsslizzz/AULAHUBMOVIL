@@ -64,4 +64,15 @@
     <string name="ver_mis_reservas">Ver mis reservas</string>
     <string name="turnoo">Turno:</string>
     <string name="Misreservas">Mis reservas</string>
+    <string name="fechas_y_horarios">Fechas y Horarios:</string>
+    <string name="reservar">Reservar</string>
+    <string name="solicitudes">Solicitudes</string>
+    <string name="maestro">Maestro:</string>
+    <string name="aceptar">Aceptar</string>
+    <string name="rechazar">Rechazar</string>
+    <string name="solicitudes_pendientes">Solicitudes Pendientes</string>
+    <string name="a_n_no_tienes_solicitudes_aceptadas">Aún no tienes solicitudes aceptadas.</string>
+    <string name="solicitudes_aceptadas">Solicitudes Aceptadas</string>
+    <string name="a_n_no_tienes_solicitudes_rechazadas">Aún no tienes solicitudes rechazadas.</string>
+    <string name="solicitudes_rechazadas">Solicitudes Rechazadas</string>
 </resources>

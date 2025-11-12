@@ -27,6 +27,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
     private boolean isAdmin = false;
+    private String Aula;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,11 +37,9 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
-        // Recuperar los CardView
-        CardView mCardAulaA = findViewById(R.id.card_aulaA);
-        CardView mCardAulaB = findViewById(R.id.card_aulaB);
-        CardView mCardAulaC = findViewById(R.id.card_aulaC);
-        CardView mAuditorio = findViewById(R.id.card_auditorio);
+
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        Aula = getIntent().getStringExtra("Aula");
 
         if (user == null){
             Intent intent =  new Intent(this, LoginActivity.class);
@@ -50,6 +49,14 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         }
 
         inicializarToolbar(mFotoPerfil, mImageButton);
+
+        // Recuperar los CardView
+        CardView mCardAulaA = findViewById(R.id.card_aulaA);
+        CardView mCardAulaB = findViewById(R.id.card_aulaB);
+        CardView mCardAulaC = findViewById(R.id.card_aulaC);
+        CardView mAuditorio = findViewById(R.id.card_auditorio);
+
+        aplicarRestricciones(isAdmin, Aula);
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.home), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -64,31 +71,29 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         View.OnClickListener irAula_Horario = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Intent intent = new Intent(HomeActivity.this, calendario.class);
-                Intent exportarToToolbar = new Intent(HomeActivity.this, ToolbarManager.class);
+                Intent exportarToCalendario = new Intent(HomeActivity.this, calendario.class);
 
                 int id = v.getId();
 
                 if (id == R.id.card_aulaA) {
-                    intent.putExtra("roomName", "Laboratorio de Cómputo A");
-                    intent.putExtra("modulo", "Módulo 1") ;
-                    intent.putExtra("imagen", R.drawable.aula_a);
+                    exportarToCalendario.putExtra("roomName", "Laboratorio de Cómputo A");
+                    exportarToCalendario.putExtra("modulo", "Módulo 1") ;
+                    exportarToCalendario.putExtra("imagen", R.drawable.aula_a);
                 } else if (id == R.id.card_aulaB) {
-                    intent.putExtra("roomName", "Laboratorio de Cómputo B");
-                    intent.putExtra("modulo", "Módulo 1");
-                    intent.putExtra("imagen", R.drawable.aula_b);
+                    exportarToCalendario.putExtra("roomName", "Laboratorio de Cómputo B");
+                    exportarToCalendario.putExtra("modulo", "Módulo 1");
+                    exportarToCalendario.putExtra("imagen", R.drawable.aula_b);
                 } else if (id == R.id.card_aulaC) {
-                    intent.putExtra("roomName", "Laboratorio de Cómputo C");
-                    intent.putExtra("modulo", "Módulo 2");
-                    intent.putExtra("imagen", R.drawable.spoooky__3_);
+                    exportarToCalendario.putExtra("roomName", "Laboratorio de Cómputo C");
+                    exportarToCalendario.putExtra("modulo", "Módulo 2");
+                    exportarToCalendario.putExtra("imagen", R.drawable.spoooky__3_);
                 } else if (id == R.id.card_auditorio) {
-                    intent.putExtra("roomName", "Auditorio FIC");
-                    intent.putExtra("modulo", "Módulo 2");
-                    intent.putExtra("imagen", R.drawable.auditorio);
+                    exportarToCalendario.putExtra("roomName", "Auditorio FIC");
+                    exportarToCalendario.putExtra("modulo", "Módulo 2");
+                    exportarToCalendario.putExtra("imagen", R.drawable.auditorio);
                 }
-                intent.putExtra("isAdmin", isAdmin);
-                exportarToToolbar.putExtra("isAdmin", isAdmin);
-                startActivity(intent);
+                exportarToCalendario.putExtra("isAdmin", isAdmin);
+                startActivity(exportarToCalendario);
             }
         };
 
@@ -99,27 +104,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         mCardAulaC.setOnClickListener(irAula_Horario);
         mAuditorio.setOnClickListener(irAula_Horario);
 
-        // -------------------------------------
-        // BLOQUE DE FIRESTORE (ROLES)
-        // -------------------------------------
-        mFirestore.collection("roles").document(uid).get()
-                .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                    @Override
-                    public void onSuccess(DocumentSnapshot documentSnapshot) {
-                        if (documentSnapshot.exists()) {
-                            Boolean adminDb = documentSnapshot.getBoolean("admin");
 
-                            isAdmin = Boolean.TRUE.equals(adminDb);
-
-                            String Aula = documentSnapshot.getString("Aula");
-                            aplicarRestricciones(isAdmin, Aula);
-                        } else {
-                            Log.e("Firestore", "No existe el documento");
-                        }
-                    }
-                }).addOnFailureListener(e -> {
-                    Log.e("Firestore", "Error al obtener datos: ", e);
-                });
     }
 
     private void aplicarRestricciones(boolean isAdmin, String Aula) {
@@ -159,12 +144,6 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         }
     }
 }
-
-
-
-
-
-
 
 
 
