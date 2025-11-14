@@ -1,6 +1,7 @@
 package com.example.aulahub;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.Button;
@@ -80,24 +81,31 @@ public class LoginActivity extends AppCompatActivity {
                     String uid = mAuth.getCurrentUser().getUid();
 
                     mFirestore.collection("roles").document(uid).get()
-                            .addOnSuccessListener(new OnSuccessListener<DocumentSnapshot>() {
-                                @Override
-                                public void onSuccess(DocumentSnapshot documentSnapshot) {
-                                    if (documentSnapshot.exists()) {
-                                        Boolean adminDb = documentSnapshot.getBoolean("admin");
+                            .addOnSuccessListener(documentSnapshot -> {
+                                if (documentSnapshot.exists()) {
+                                    Boolean adminDb = documentSnapshot.getBoolean("admin");
 
-                                        boolean isAdmin = Boolean.TRUE.equals(adminDb);
-                                        String Aula = documentSnapshot.getString("Aula");
+                                    boolean isAdmin = Boolean.TRUE.equals(adminDb);
+                                    String Aula = documentSnapshot.getString("Aula");
+                                    String Horario= documentSnapshot.getString("Horario");
+                                    SharedPreferences prefs = getSharedPreferences("user_data", MODE_PRIVATE);
+                                    prefs.edit().clear().apply();  // Limpia antes de guardar nuevos datos
+                                    prefs.edit()
+                                            .putBoolean("isAdmin", isAdmin)
+                                            .putString("Aula", Aula)
+                                            .putString("Horario", Horario)
+                                            .apply();  // Usa apply() para realizar la operación de manera asíncrona
+                                    Log.d("LoginActivity", "isAdmin saved to SharedPreferences: " + isAdmin);
 
-                                        Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
-                                        intent.putExtra("isAdmin", isAdmin);
-                                        intent.putExtra("Aula", Aula);
-                                        startActivity(intent);
-                                        finish();
+                                    Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
+                                    intent.putExtra("isAdmin", isAdmin);
+                                    intent.putExtra("Aula", Aula);
+                                    intent.putExtra("Horario", Horario);
+                                    startActivity(intent);
+                                    finish();
 
-                                    } else {
-                                        Log.e("Firestore", "No existe el documento");
-                                    }
+                                } else {
+                                    Log.e("Firestore", "No existe el documento");
                                 }
                             }).addOnFailureListener(e -> {
                                 Log.e("Firestore", "Error al obtener datos: ", e);

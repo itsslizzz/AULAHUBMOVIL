@@ -68,7 +68,7 @@ public class ConfirmacionActivity extends AppCompatActivity {
         Button ir_a_reservas=findViewById(R.id.ir_a_reservas);
         ir_a_reservas.setOnClickListener(v ->{
 
-            Intent misreservas= new Intent(ConfirmacionActivity.this, MisReservas.class);
+           Intent misreservas= new Intent(ConfirmacionActivity.this, MisReservas.class);
             startActivity(misreservas);
             finish();
         });

@@ -1,3 +1,4 @@
+
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,7 +13,7 @@
         android:id="@+id/tv_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/solicitudes_rechazadas"
+        android:text="@string/solicitudes_pendientes"
         android:textSize="28sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -39,7 +40,7 @@
                 android:id="@+id/tv_vacio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/a_n_no_tienes_solicitudes_rechazadas"
+                android:text="Aún no tienes solicitudes."
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:gravity="center"
@@ -48,7 +49,7 @@
 
             <!-- CONTENEDOR DE CARDS -->
             <LinearLayout
-                android:id="@+id/container_solicitudes_rechazadas"
+                android:id="@+id/container_solicitudes"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

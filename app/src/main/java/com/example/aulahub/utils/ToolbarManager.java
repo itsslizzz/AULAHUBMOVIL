@@ -2,6 +2,7 @@ package com.example.aulahub.utils;
 
 import android.app.Activity;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -41,6 +42,7 @@ public class ToolbarManager extends AppCompatActivity {
     private ActivityResultLauncher<Intent> imagePickerLauncher;
     protected String uid;
     protected FirebaseUser user;
+    private boolean isAdmin = false;
 
 
 
@@ -53,6 +55,10 @@ public class ToolbarManager extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         uid = mAuth.getUid();
         user = mAuth.getCurrentUser();
+        // Recuperar el valor de isAdmin desde SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("user_data", MODE_PRIVATE);
+        isAdmin = prefs.getBoolean("isAdmin", false); // Recuperamos el valor de isAdmin
+        Log.d("ToolbarManager", "isAdmin retrieved from SharedPreferences onCreate: " + isAdmin);
     }
 
     protected void inicializarToolbar(ImageView fotoPerfil, ImageButton imageButton) {
@@ -77,10 +83,10 @@ public class ToolbarManager extends AppCompatActivity {
                 });
 
 
+
+        Log.d("ToolbarManager", "isAdmin onCreate: " + isAdmin);
         PopupMenu popupMenu = new PopupMenu(this, mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
-
-        boolean isAdmin = getIntent().getBooleanExtra("isAdmin", false);
         if (isAdmin){
             popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
             popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
@@ -96,7 +102,7 @@ public class ToolbarManager extends AppCompatActivity {
                 startActivity(new Intent(this, AyudaActivity.class));
                 return true;
             }else if (id == R.id.ItemMisReservas) {
-                startActivity(new Intent(this, MisReservas.class));
+               startActivity(new Intent(this, MisReservas.class));
                 return true;
             }
             return true;

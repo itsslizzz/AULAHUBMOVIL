@@ -12,7 +12,7 @@
         android:id="@+id/tv_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/solicitudes_pendientes"
+        android:text="@string/solicitudes_aceptadas"
         android:textSize="28sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -39,7 +39,7 @@
                 android:id="@+id/tv_vacio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="Aún no tienes solicitudes."
+                android:text="@string/a_n_no_tienes_solicitudes_aceptadas"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:gravity="center"
@@ -48,7 +48,7 @@
 
             <!-- CONTENEDOR DE CARDS -->
             <LinearLayout
-                android:id="@+id/container_solicitudes"
+                android:id="@+id/container_solicitudes_aceptadas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"

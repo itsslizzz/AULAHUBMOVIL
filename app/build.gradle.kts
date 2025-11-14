@@ -51,6 +51,9 @@ dependencies {
     //Implementacion de FirebaseStorage
     implementation(libs.firebase.storage)
 
+    //Implementacion de FirebaseMessaging
+    implementation(libs.firebase.messaging)
+
 
     // AndroidX y tests
     implementation(libs.appcompat)
