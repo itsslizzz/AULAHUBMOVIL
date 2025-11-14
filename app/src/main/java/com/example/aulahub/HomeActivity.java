@@ -3,6 +3,7 @@ package com.example.aulahub;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -27,7 +28,7 @@ import com.google.firebase.firestore.FirebaseFirestore;
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
     private boolean isAdmin = false;
-    private String Aula;
+    private String Aula, Horario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,9 +38,12 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
-
-        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
-        Aula = getIntent().getStringExtra("Aula");
+        // Recuperar los valores desde SharedPreferences
+        SharedPreferences prefs = getSharedPreferences("user_data", MODE_PRIVATE);
+        isAdmin = prefs.getBoolean("isAdmin", false);
+        Log.d("HomeActivity", "isAdmin retrieved from SharedPreferences: " + isAdmin);
+        Aula = prefs.getString("Aula", ""); // Valor predeterminado vacío si no existe
+        Horario = prefs.getString("Horario", ""); // Valor predeterminado vacío si no existe
 
         if (user == null){
             Intent intent =  new Intent(this, LoginActivity.class);
@@ -93,6 +97,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     exportarToCalendario.putExtra("imagen", R.drawable.auditorio);
                 }
                 exportarToCalendario.putExtra("isAdmin", isAdmin);
+                exportarToCalendario.putExtra("Horario", Horario);
                 startActivity(exportarToCalendario);
             }
         };

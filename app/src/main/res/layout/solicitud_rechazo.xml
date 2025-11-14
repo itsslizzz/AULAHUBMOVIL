@@ -12,7 +12,7 @@
         android:id="@+id/tv_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/solicitudes_aceptadas"
+        android:text="@string/solicitudes_rechazadas"
         android:textSize="28sp"
         android:textStyle="bold"
         android:gravity="center"
@@ -39,7 +39,7 @@
                 android:id="@+id/tv_vacio"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:text="@string/a_n_no_tienes_solicitudes_aceptadas"
+                android:text="@string/a_n_no_tienes_solicitudes_rechazadas"
                 android:textSize="16sp"
                 android:textColor="@color/black"
                 android:gravity="center"
@@ -48,7 +48,7 @@
 
             <!-- CONTENEDOR DE CARDS -->
             <LinearLayout
-                android:id="@+id/container_solicitudes_aceptadas"
+                android:id="@+id/container_solicitudes_rechazadas"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:orientation="vertical"
@@ -59,3 +59,4 @@
     </ScrollView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
+

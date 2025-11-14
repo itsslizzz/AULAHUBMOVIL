@@ -172,33 +172,33 @@
                 android:textSize="14sp"
                 android:textColor="@color/black" />
         </LinearLayout>
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        android:paddingVertical="4dp">
-
-        <Button
-            android:layout_width="wrap_content"
+        <LinearLayout
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/margin_20dp"
-            android:text="@string/aceptar"
-            android:textSize="15sp"
-            android:textStyle="italic"
+            android:orientation="horizontal"
+            android:paddingVertical="4dp">
 
-            android:backgroundTint="@color/Aceptar"/>
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/margin_20dp"
+                android:text="@string/aceptar"
+                android:textSize="15sp"
+                android:textStyle="italic"
 
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="70dp"
-            android:text="@string/rechazar"
-            android:textSize="15sp"
-            android:textStyle="italic"
-            android:backgroundTint="@color/Rechazar"/>
+                android:backgroundTint="@color/Aceptar"/>
+
+            <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="70dp"
+                android:text="@string/rechazar"
+                android:textSize="15sp"
+                android:textStyle="italic"
+                android:backgroundTint="@color/Rechazar"/>
 
 
-    </LinearLayout>
+        </LinearLayout>
 
     </LinearLayout>
 

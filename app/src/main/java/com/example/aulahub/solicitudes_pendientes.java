@@ -31,7 +31,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
-        setContentView(R.layout.activity_solicitudes_pendientes);
+        setContentView(R.layout.solicitud_pendientes);
 
         // Ajuste visual
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
@@ -117,4 +117,3 @@ public class solicitudes_pendientes extends AppCompatActivity {
     }
 
 }
-
