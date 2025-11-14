@@ -69,20 +69,21 @@ public class solicitudes_pendientes extends AppCompatActivity {
         }
 
         for (DocumentSnapshot doc : querySnapshot) {
+            // Inflate the card view for each request
             View cardView = inflater.inflate(R.layout.item_card_solicitud, containerSolicitudes, false);
 
-            // obtener id
+            // Get the professor ID and retrieve the name from the 'profesores' collection
             String profesorID = doc.getString("profesorID");
 
-            // obtener el nombre a base del ID del profe para poder mostrarlo en el apartado Maestro
+            // Query Firestore for the professor's name
             db.collection("profesores").document(profesorID)
                     .get()
                     .addOnSuccessListener(profesorDoc -> {
                         String nombreProfesor = profesorDoc.getString("Nombre");
-
+                        // Set the professor's name in the card's TextView
                         ((TextView) cardView.findViewById(R.id.tv_maestro)).setText(nombreProfesor != null ? nombreProfesor : "Nombre no disponible");
                     })
-                    .addOnFailureListener(e -> Log.e("Firestore", "Error al obtener el nombre del maestro", e));
+                    .addOnFailureListener(e -> Log.e("Firestore", "Error getting professor name", e));
 
             // Set other information in the card view
             ((TextView) cardView.findViewById(R.id.tv_materia)).setText(doc.getString("materia"));
@@ -90,7 +91,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
             ((TextView) cardView.findViewById(R.id.tv_turno)).setText(doc.getString("turno"));
             ((TextView) cardView.findViewById(R.id.tv_grupo)).setText(doc.getString("grupo"));
 
-            // Mostrar horas y fechas de mejor manera
+            // Handle selected hours
             Object horarios = doc.get("horariosSeleccionados");
             TextView tvHorarios = cardView.findViewById(R.id.tv_horarios);
 
@@ -107,13 +108,13 @@ public class solicitudes_pendientes extends AppCompatActivity {
                 tvHorarios.setText("No hay horarios seleccionados");
             }
 
+            // Set status (Pendiente or other statuses)
             TextView tvStatus = cardView.findViewById(R.id.tv_status);
             String status = doc.getString("status");
             tvStatus.setText(status != null ? status : "Pendiente");
 
-            // mostrar la card en el layout
+            // Add the card to the layout
             containerSolicitudes.addView(cardView);
         }
     }
-
 }

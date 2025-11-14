@@ -1,6 +1,5 @@
 package com.example.aulahub;
 
-import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -9,7 +8,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.PopupMenu;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.HorizontalScrollView;
@@ -21,11 +19,8 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
-import com.google.firebase.Timestamp;
 import com.google.firebase.firestore.DocumentSnapshot;
 
-
-import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -40,15 +35,10 @@ import java.util.HashMap;
 
 public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
-    private Spinner spMateria, spAula, spTurno;
-    private TextView tvRoomName, tvModulo, tvHorarios, tvFechasSeleccionadas, tvRangoSemana;
-    private Button btnContinuar, btn_Reservar, btnSemanaAnterior, btnSemanaSiguiente;
-    private HorizontalScrollView scrollMatutino, scrollVespertino;
-    private LinearLayout layoutSemana;
-    private TableLayout tlSemana;
+    private Spinner spMateria, spAula;
+
+    // Semana que se está mostrando (inicio en lunes)
     private Calendar semanaActualInicio;
-    private ImageView imgAula;
-    private String roomName, Horario;
 
     // Horarios por turno
     private final String[] HORAS_MATUTINO = {
@@ -78,27 +68,27 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         inicializarToolbar(mFotoPerfil, mImageButton);
 
         // --- Referencias ---
-        spTurno = findViewById(R.id.spTurno);
+        Spinner spTurno = findViewById(R.id.spTurno);
         spMateria = findViewById(R.id.spMateria);
         spAula = findViewById(R.id.spAula);
 
-        tvRoomName = findViewById(R.id.tvRoomName);
-        tvModulo = findViewById(R.id.tv_modulo);
-        imgAula = findViewById(R.id.imgAula);
+        TextView tvRoomName = findViewById(R.id.tvRoomName);
+        TextView tvModulo = findViewById(R.id.tv_modulo);
+        ImageView imgAula = findViewById(R.id.imgAula);
 
-        btnContinuar = findViewById(R.id.btnContinuar);
-        btn_Reservar = findViewById(R.id.btn_Reservar);
-        tvHorarios = findViewById(R.id.tv_horariosCalendario);
-        tvFechasSeleccionadas = findViewById(R.id.tvFechasSeleccionadas);
-        scrollMatutino = findViewById(R.id.scrollMatutino);
-        scrollVespertino = findViewById(R.id.scrollVespertino);
+        Button btnContinuar = findViewById(R.id.btnContinuar);
+        Button btn_Reservar = findViewById(R.id.btn_Reservar);
+        TextView tvHorarios = findViewById(R.id.tv_horariosCalendario);
+        TextView tvFechasSeleccionadas = findViewById(R.id.tvFechasSeleccionadas);
+        HorizontalScrollView scrollMatutino = findViewById(R.id.scrollMatutino);
+        HorizontalScrollView scrollVespertino = findViewById(R.id.scrollVespertino);
 
         // NUEVO: calendario semanal
-         layoutSemana = findViewById(R.id.layoutSemana);
-         tlSemana = findViewById(R.id.tlSemana);
-         tvRangoSemana = findViewById(R.id.tvRangoSemana);
-         btnSemanaAnterior = findViewById(R.id.btnSemanaAnterior);
-        btnSemanaSiguiente = findViewById(R.id.btnSemanaSiguiente);
+        LinearLayout layoutSemana = findViewById(R.id.layoutSemana);
+        TableLayout tlSemana = findViewById(R.id.tlSemana);
+        TextView tvRangoSemana = findViewById(R.id.tvRangoSemana);
+        Button btnSemanaAnterior = findViewById(R.id.btnSemanaAnterior);
+        Button btnSemanaSiguiente = findViewById(R.id.btnSemanaSiguiente);
 
         // --- Estado inicial ---
         tvHorarios.setVisibility(View.GONE);
@@ -110,12 +100,11 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         //Obetner valores de la variables exportardas de otras actividades
 
         // recuperara el valor de la variable admin de HomeActivity
-        Horario = getIntent().getStringExtra("Horario");
         boolean isAdmin = getIntent().getBooleanExtra("isAdmin", false);
         ocultarObjetos(isAdmin);
 
         // --- Mostrar nombre, módulo e imagen ---
-        roomName = getIntent().getStringExtra("roomName");
+        String roomName = getIntent().getStringExtra("roomName");
         if (roomName == null || roomName.isEmpty()) roomName = "Aula";
         tvRoomName.setText(roomName);
 
@@ -125,7 +114,6 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
         int imagen = getIntent().getIntExtra("imagen", 0);
         if (imagen != 0) imgAula.setImageResource(imagen);
-
 
 
         // 1️⃣ Obtener materias del profesor
@@ -241,14 +229,15 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
             btn_Reservar.setVisibility(View.VISIBLE);
         });
+
         if (isAdmin){
-            apilcarHorarioToAdmin(Horario);
             btnContinuar.performClick();
         }
 
         // --- Guardar reserva en Firestore ---
-
         btn_Reservar.setOnClickListener(v -> {
+            Log.d("Reservas", "Botón Reservar presionado");
+
             String turnoSeleccionado = spTurno.getSelectedItem().toString();
             String materiaSeleccionada = spMateria.getSelectedItem().toString();
             String grupoSeleccionado = spAula.getSelectedItem().toString();
@@ -256,43 +245,28 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             String profesorID = mAuth.getCurrentUser().getUid();
             String fechasSeleccionadas = tvFechasSeleccionadas.getText().toString();
 
-            // Llamar al método que maneja la reserva
-            realizarReserva(turnoSeleccionado, materiaSeleccionada, grupoSeleccionado, aulaSeleccionada,
-                    profesorID, fechasSeleccionadas, horariosSeleccionados);
-        });
-    }
-    private void realizarReserva(String turnoSeleccionado, String materiaSeleccionada, String grupoSeleccionado,
-                                 String aulaSeleccionada, String profesorID, String fechasSeleccionadas,
-                                 List<String> horariosSeleccionados) {
-        Log.d("Reservas", "Botón Reservar presionado");
+            Map<String, Object> reserva = new HashMap<>();
+            reserva.put("profesorID", profesorID);
+            reserva.put("materia", materiaSeleccionada);
+            reserva.put("grupo", grupoSeleccionado);
+            reserva.put("aula", aulaSeleccionada);
+            reserva.put("turno", turnoSeleccionado);
+            reserva.put("fechas", fechasSeleccionadas);
+            reserva.put("status", "Pendiente");
+            // esta condiccion sirve para que el usuario elija una hora para que pueda reservar
+            if (fechasSeleccionadas.isEmpty()){
+                Toast.makeText(this, "Selecciona un horario", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            reserva.put("horariosSeleccionados", horariosSeleccionados);
+            // esta condiccion sirve para que el usuario ellja un rango de fechas para poder reservar
+            if (horariosSeleccionados.isEmpty()){
+                Toast.makeText(this, "Selecciona un rango de fechas", Toast.LENGTH_SHORT).show();
+                return;
+            }
+            reserva.put("timestamp", new Date());
 
-        Map<String, Object> reserva = new HashMap<>();
-        reserva.put("profesorID", profesorID);
-        reserva.put("materia", materiaSeleccionada);
-        reserva.put("grupo", grupoSeleccionado);
-        reserva.put("aula", aulaSeleccionada);
-        reserva.put("turno", turnoSeleccionado);
-        reserva.put("fechas", fechasSeleccionadas);
-        reserva.put("status", "Pendiente");
-
-        // Esta condición sirve para que el usuario elija una hora para que pueda reservar
-        if (fechasSeleccionadas.isEmpty()){
-            Toast.makeText(this, "Selecciona un horario", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        reserva.put("horariosSeleccionados", horariosSeleccionados);
-
-        // Esta condición sirve para que el usuario elija un rango de fechas para poder reservar
-        if (horariosSeleccionados.isEmpty()){
-            Toast.makeText(this, "Selecciona un rango de fechas", Toast.LENGTH_SHORT).show();
-            return;
-        }
-        reserva.put("timestamp", new Date());
-
-        // Aquí evaluamos la sala y el turno para agregar la reserva a la colección correspondiente
-        String collectionName = obtenerColeccionReserva(aulaSeleccionada, turnoSeleccionado);
-        if (collectionName != null) {
-            mFirestore.collection(collectionName).document().collection("pendientes")
+            mFirestore.collection("reservas")
                     .add(reserva)
                     .addOnSuccessListener(docRef -> {
                         Log.d("Reservas", "Reserva guardada con ID: " + docRef.getId());
@@ -300,71 +274,17 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                     .addOnFailureListener(e -> {
                         Log.e("Reservas", "Error guardando reserva", e);
                     });
-        }
 
-        // Redirigir a la actividad de confirmación con los detalles de la reserva
-        Intent intent = new Intent(calendario.this, ConfirmacionActivity.class);
-        intent.putExtra("materia", materiaSeleccionada);
-        intent.putExtra("aula", aulaSeleccionada);
-        intent.putExtra("grupo", grupoSeleccionado);
-        intent.putExtra("turno", turnoSeleccionado);
-        intent.putExtra("fechas", fechasSeleccionadas);
-        intent.putStringArrayListExtra("horarios", new ArrayList<>(horariosSeleccionados));
-        startActivity(intent);
-    }
+            Intent intent = new Intent(calendario.this, ConfirmacionActivity.class);
+            intent.putExtra("materia", materiaSeleccionada);
+            intent.putExtra("aula", aulaSeleccionada);
+            intent.putExtra("grupo", grupoSeleccionado);
+            intent.putExtra("turno", turnoSeleccionado);
+            intent.putExtra("fechas", fechasSeleccionadas);
+            intent.putStringArrayListExtra("horarios", new ArrayList<>(horariosSeleccionados));
 
-    private String obtenerColeccionReserva(String aulaSeleccionada, String turnoSeleccionado) {
-        if (aulaSeleccionada.equals("Laboratorio de Cómputo A")) {
-            if (turnoSeleccionado.equals("Matutino"))
-                return "reservas_A_matutino";
-            if (turnoSeleccionado.equals("Vespertino"))
-                return "reservas_A_vespertino";
-        } else if (aulaSeleccionada.equals("Laboratorio de Cómputo B")) {
-            if (turnoSeleccionado.equals("Matutino"))
-                return "reservas_B_matutino";
-            if (turnoSeleccionado.equals("Vespertino"))
-                return "reservas_B_vespertino";
-        } else if (aulaSeleccionada.equals("Laboratorio de Cómputo C")) {
-            if (turnoSeleccionado.equals("Matutino"))
-                return "reservas_C_matutino";
-            if (turnoSeleccionado.equals("Vespertino"))
-                return "reservas_C_vespertino";
-        } else if (aulaSeleccionada.equals("Auditorio FIC")) {
-            if (turnoSeleccionado.equals("Matutino"))
-                return "reservas_Audi_matutino";
-            if (turnoSeleccionado.equals("Vespertino"))
-                return "reservas_Audi_vespertino";
-        }
-        return null; // En caso de no encontrar una coincidencia, devuelve null
-    }
-
-    private void apilcarHorarioToAdmin(String Horario){
-        if (Horario != null){
-            Spinner spTurno = findViewById(R.id.spTurno);
-
-            if (Horario.equals("Matutino")){
-                spTurno.setSelection(0);
-            } else if (Horario.equals("Vespertino")){
-                spTurno.setSelection(1);
-            }
-
-            String[] horasTurno = obtenerHorasPorTurno(Horario);
-
-            List<String> horariosSeleccionados = new ArrayList<>();
-            TextView tvFechasSeleccionadas = findViewById(R.id.tvFechasSeleccionadas);
-            actualizarSemana(
-                    findViewById(R.id.tlSemana),
-                    findViewById(R.id.tvRangoSemana),
-                    tvFechasSeleccionadas,
-                    horariosSeleccionados,
-                    horasTurno
-            );
-
-            // Hacer visible el calendario y los botones necesarios
-            LinearLayout layoutSemana = findViewById(R.id.layoutSemana);
-            layoutSemana.setVisibility(View.VISIBLE);
-
-        }
+            startActivity(intent);
+        });
     }
 
     // Devuelve el arreglo de horas según el turno
@@ -543,5 +463,4 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             btnContinuar.setVisibility(View.GONE);
         }
     }
-
 }

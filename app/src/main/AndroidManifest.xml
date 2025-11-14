@@ -12,14 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AULAHUB">
         <activity
-            android:name=".solicitudes_aceptadas"
-            android:exported="false" />
-        <activity
-            android:name=".solicitudes_rechazadas"
-            android:exported="false" />
-        <activity
             android:name=".solicitudes_pendientes"
-            android:exported="false"></activity>
+            android:exported="false">
+
+
+        </activity>
         <activity
             android:name=".MisReservas"
             android:exported="false" />
@@ -30,10 +27,13 @@
             android:name=".HomeActivity"
             android:exported="true">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
+            <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.LAUNCHER" />
+            <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
+
         </activity> <!-- Pantallas secundarias -->
         <activity
             android:name=".calendario"
