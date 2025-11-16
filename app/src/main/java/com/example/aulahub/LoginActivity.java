@@ -88,11 +88,13 @@ public class LoginActivity extends AppCompatActivity {
                                         // Si existe en roles, obtener los datos de la colección 'roles'
                                         Boolean adminDb = documentSnapshot.getBoolean("admin");
                                         String Aula = documentSnapshot.getString("Aula");
+                                        String Horario  = documentSnapshot.getString("Horario");
 
                                         boolean isAdmin = Boolean.TRUE.equals(adminDb);
                                         Intent intent = new Intent(LoginActivity.this, HomeActivity.class);
                                         intent.putExtra("isAdmin", isAdmin);
                                         intent.putExtra("Aula", Aula);
+                                        intent.putExtra("Horario", Horario);
                                         startActivity(intent);
                                         finish();
                                     } else {

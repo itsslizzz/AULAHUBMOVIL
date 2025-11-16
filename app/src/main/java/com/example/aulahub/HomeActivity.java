@@ -28,6 +28,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
     private boolean isAdmin = false;
     private String Aula;
+    private String Horario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,6 +41,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
         Aula = getIntent().getStringExtra("Aula");
+        Horario = getIntent().getStringExtra("Horario");
 
         if (user == null){
             Intent intent =  new Intent(this, LoginActivity.class);

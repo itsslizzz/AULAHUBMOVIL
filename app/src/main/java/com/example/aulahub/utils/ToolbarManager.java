@@ -20,6 +20,7 @@ import com.example.aulahub.AyudaActivity;
 import com.example.aulahub.LoginActivity;
 import com.example.aulahub.MisReservas;
 import com.example.aulahub.R;
+import com.example.aulahub.solicitudes_pendientes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.firestore.FieldValue;
@@ -42,8 +43,10 @@ public class ToolbarManager extends AppCompatActivity {
     protected String uid;
     protected FirebaseUser user;
 
-
-
+    // DATOS DE ROL
+    protected boolean isAdmin = false;
+    protected String aulaAdmin = "";
+    protected String horarioAdmin = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -53,6 +56,33 @@ public class ToolbarManager extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         uid = mAuth.getUid();
         user = mAuth.getCurrentUser();
+
+        // Cargar rol del usuario una sola vez
+        cargarRolUsuario();
+    }
+
+    private void cargarRolUsuario() {
+        if (user == null) return;
+
+        mFirestore.collection("roles")
+                .document(uid)
+                .get()
+                .addOnSuccessListener(doc -> {
+                    if (doc.exists()) {
+                        isAdmin = Boolean.TRUE.equals(doc.getBoolean("admin"));
+                        aulaAdmin = doc.getString("Aula");
+                        horarioAdmin = doc.getString("Horario");
+
+                        Log.d("Toolbar", "Rol cargado -> isAdmin=" + isAdmin +
+                                ", Aula=" + aulaAdmin +
+                                ", Horario=" + horarioAdmin);
+                    } else {
+                        Log.d("Toolbar", "Usuario sin documento en 'roles'");
+                    }
+                })
+                .addOnFailureListener(e ->
+                        Log.e("Toolbar", "Error al leer 'roles': ", e)
+                );
     }
 
     protected void inicializarToolbar(ImageView fotoPerfil, ImageButton imageButton) {
@@ -76,15 +106,14 @@ public class ToolbarManager extends AppCompatActivity {
                     }
                 });
 
-
+        // Menú principal
         PopupMenu popupMenu = new PopupMenu(this, mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
 
-        boolean isAdmin = getIntent().getBooleanExtra("isAdmin", false);
-        if (isAdmin){
-            popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
-            popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
-        }
+
+
+
+
 
         popupMenu.setOnMenuItemClickListener(item -> {
             int id = item.getItemId();
@@ -92,25 +121,41 @@ public class ToolbarManager extends AppCompatActivity {
             if (id == R.id.ItemAjustes) {
                 mostrarSubmenuAjustes(email);
                 return true;
-            }else if (id == R.id.ItemAyuda) {
+
+            } else if (id == R.id.ItemAyuda) {
                 startActivity(new Intent(this, AyudaActivity.class));
                 return true;
-            }else if (id == R.id.ItemMisReservas) {
+
+            } else if (id == R.id.ItemMisReservas) {
                 startActivity(new Intent(this, MisReservas.class));
+                return true;
+
+            } else if (id == R.id.ItemSolicitudesPendientes) {
+                Intent i = new Intent(this, solicitudes_pendientes.class);
+                i.putExtra("isAdmin", isAdmin);
+                i.putExtra("Aula", aulaAdmin);
+                i.putExtra("Horario", horarioAdmin);
+
+                Log.d("Toolbar", "Enviando -> isAdmin=" + isAdmin +
+                        ", Aula=" + aulaAdmin +
+                        ", Horario=" + horarioAdmin);
+
+                startActivity(i);
                 return true;
             }
             return true;
         });
 
+        // Menú de la foto de perfil
         PopupMenu popupPerfil = new PopupMenu(this, mFotoPerfil);
         popupPerfil.getMenuInflater().inflate(R.menu.perfil_popup, popupPerfil.getMenu());
 
-        popupPerfil.setOnMenuItemClickListener(item ->{
+        popupPerfil.setOnMenuItemClickListener(item -> {
             int idPerfilpopup = item.getItemId();
 
             if (idPerfilpopup == R.id.ItemSubirFoto) {
                 imageChooser();
-            }else if (idPerfilpopup == R.id.ItemBorrarFoto) {
+            } else if (idPerfilpopup == R.id.ItemBorrarFoto) {
                 BorrarFoto(uid);
             }
             return true;

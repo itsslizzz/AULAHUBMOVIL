@@ -17,6 +17,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import java.util.Arrays;
 
 import java.util.List;
 
@@ -27,35 +28,108 @@ public class solicitudes_pendientes extends AppCompatActivity {
     private LinearLayout containerSolicitudes;
     private TextView tvVacio;
 
+    private boolean isAdmin;
+    private String aulaAdmin;
+    private String horarioAdmin;
+
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         EdgeToEdge.enable(this);
         setContentView(R.layout.solicitud_pendientes);
 
-        // Ajuste visual
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.main), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
             v.setPadding(systemBars.left, systemBars.top, systemBars.right, systemBars.bottom);
             return insets;
         });
 
-        // Inicializar Firebase y vistas
         db = FirebaseFirestore.getInstance();
         mAuth = FirebaseAuth.getInstance();
         containerSolicitudes = findViewById(R.id.container_solicitudes);
         tvVacio = findViewById(R.id.tv_vacio);
 
+
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        aulaAdmin = getIntent().getStringExtra("Aula");
+        horarioAdmin = getIntent().getStringExtra("Horario");
+
+        Log.d("Solicitudes", "isAdmin=" + isAdmin +
+                ", aulaAdmin=" + aulaAdmin +
+                ", horarioAdmin=" + horarioAdmin);
+
         cargarSolicitudes();
     }
 
+
+
     private void cargarSolicitudes() {
-        db.collection("reservas")
-                .whereEqualTo("status", "Pendiente") // solo pendientes
-                .get()
-                .addOnSuccessListener(this::mostrarSolicitudes)
-                .addOnFailureListener(Throwable::printStackTrace);
+
+        if (isAdmin && "AB".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
+
+            db.collection("reservas")
+                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("turno", "Matutino")
+                    .whereIn("aula", Arrays.asList(
+                            "Laboratorio de Cómputo A",
+                            "Laboratorio de Cómputo B"
+                    ))
+                    .get()
+                    .addOnSuccessListener(this::mostrarSolicitudes)
+                    .addOnFailureListener(Throwable::printStackTrace);
+
+        } else if (isAdmin && "AB".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)){
+
+            db.collection("reservas")
+                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("turno", "Vespertino")
+                    .whereIn("aula", Arrays.asList(
+                            "Laboratorio de Cómputo A",
+                            "Laboratorio de Cómputo B"
+                    ))
+                    .get()
+                    .addOnSuccessListener(this::mostrarSolicitudes)
+                    .addOnFailureListener(Throwable::printStackTrace);
+
+        }else if (isAdmin&& "C".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)){
+            db.collection("reservas")
+                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("turno", "Matutino")
+                    .whereEqualTo("aula", "Laboratorio de Cómputo C")
+                    .get()
+                    .addOnSuccessListener(this::mostrarSolicitudes)
+                    .addOnFailureListener(Throwable::printStackTrace);
+        } else if (isAdmin&& "C".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
+            db.collection("reservas")
+                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("turno", "Vespertino")
+                    .whereEqualTo("aula", "Laboratorio de Cómputo C")
+                    .get()
+                    .addOnSuccessListener(this::mostrarSolicitudes)
+                    .addOnFailureListener(Throwable::printStackTrace);
+        } else if (isAdmin&& "Auditorio".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
+            db.collection("reservas")
+                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("turno", "Matutino")
+                    .whereEqualTo("aula", "Auditorio FIC")
+                    .get()
+                    .addOnSuccessListener(this::mostrarSolicitudes)
+                    .addOnFailureListener(Throwable::printStackTrace);
+            
+        } else if (isAdmin&& "Auditorio".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
+            db.collection("reservas")
+                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("turno", "Vespertino")
+                    .whereEqualTo("aula", "Auditorio FIC")
+                    .get()
+                    .addOnSuccessListener(this::mostrarSolicitudes)
+                    .addOnFailureListener(Throwable::printStackTrace);
+            
+        }
     }
+
+
 
     private void mostrarSolicitudes(QuerySnapshot querySnapshot) {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -69,13 +143,13 @@ public class solicitudes_pendientes extends AppCompatActivity {
         }
 
         for (DocumentSnapshot doc : querySnapshot) {
-            // Inflate the card view for each request
+
             View cardView = inflater.inflate(R.layout.item_card_solicitud, containerSolicitudes, false);
 
-            // Get the professor ID and retrieve the name from the 'profesores' collection
+
             String profesorID = doc.getString("profesorID");
 
-            // Query Firestore for the professor's name
+
             db.collection("profesores").document(profesorID)
                     .get()
                     .addOnSuccessListener(profesorDoc -> {
@@ -85,13 +159,13 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     })
                     .addOnFailureListener(e -> Log.e("Firestore", "Error getting professor name", e));
 
-            // Set other information in the card view
+
             ((TextView) cardView.findViewById(R.id.tv_materia)).setText(doc.getString("materia"));
             ((TextView) cardView.findViewById(R.id.tv_salon)).setText(doc.getString("aula"));
             ((TextView) cardView.findViewById(R.id.tv_turno)).setText(doc.getString("turno"));
             ((TextView) cardView.findViewById(R.id.tv_grupo)).setText(doc.getString("grupo"));
 
-            // Handle selected hours
+
             Object horarios = doc.get("horariosSeleccionados");
             TextView tvHorarios = cardView.findViewById(R.id.tv_horarios);
 
@@ -108,12 +182,12 @@ public class solicitudes_pendientes extends AppCompatActivity {
                 tvHorarios.setText("No hay horarios seleccionados");
             }
 
-            // Set status (Pendiente or other statuses)
+            // cargar status
             TextView tvStatus = cardView.findViewById(R.id.tv_status);
             String status = doc.getString("status");
             tvStatus.setText(status != null ? status : "Pendiente");
 
-            // Add the card to the layout
+
             containerSolicitudes.addView(cardView);
         }
     }
