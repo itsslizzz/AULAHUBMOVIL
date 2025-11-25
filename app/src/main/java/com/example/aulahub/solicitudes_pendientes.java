@@ -17,8 +17,8 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
-import java.util.Arrays;
 
+import java.util.Arrays;
 import java.util.List;
 
 public class solicitudes_pendientes extends AppCompatActivity {
@@ -31,7 +31,6 @@ public class solicitudes_pendientes extends AppCompatActivity {
     private boolean isAdmin;
     private String aulaAdmin;
     private String horarioAdmin;
-
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -50,9 +49,9 @@ public class solicitudes_pendientes extends AppCompatActivity {
         containerSolicitudes = findViewById(R.id.container_solicitudes);
         tvVacio = findViewById(R.id.tv_vacio);
 
-
-        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
-        aulaAdmin = getIntent().getStringExtra("Aula");
+        // datos que vienen desde ToolbarManager
+        isAdmin      = getIntent().getBooleanExtra("isAdmin", false);
+        aulaAdmin    = getIntent().getStringExtra("Aula");
         horarioAdmin = getIntent().getStringExtra("Horario");
 
         Log.d("Solicitudes", "isAdmin=" + isAdmin +
@@ -61,8 +60,6 @@ public class solicitudes_pendientes extends AppCompatActivity {
 
         cargarSolicitudes();
     }
-
-
 
     private void cargarSolicitudes() {
 
@@ -79,7 +76,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
 
-        } else if (isAdmin && "AB".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)){
+        } else if (isAdmin && "AB".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
 
             db.collection("reservas")
                     .whereEqualTo("status", "Pendiente")
@@ -92,7 +89,8 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
 
-        }else if (isAdmin&& "C".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)){
+        } else if (isAdmin && "C".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
+
             db.collection("reservas")
                     .whereEqualTo("status", "Pendiente")
                     .whereEqualTo("turno", "Matutino")
@@ -100,7 +98,9 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
-        } else if (isAdmin&& "C".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
+
+        } else if (isAdmin && "C".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
+
             db.collection("reservas")
                     .whereEqualTo("status", "Pendiente")
                     .whereEqualTo("turno", "Vespertino")
@@ -108,7 +108,9 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
-        } else if (isAdmin&& "Auditorio".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
+
+        } else if (isAdmin && "Auditorio".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
+
             db.collection("reservas")
                     .whereEqualTo("status", "Pendiente")
                     .whereEqualTo("turno", "Matutino")
@@ -117,7 +119,8 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
 
-        } else if (isAdmin&& "Auditorio".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
+        } else if (isAdmin && "Auditorio".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
+
             db.collection("reservas")
                     .whereEqualTo("status", "Pendiente")
                     .whereEqualTo("turno", "Vespertino")
@@ -126,10 +129,12 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
 
+        } else {
+            // Por si algo sale raro y no entra a ningún if, que al menos no truene.
+            Log.w("Solicitudes", "No coincide ningún filtro de admin, no se cargan reservas.");
+            tvVacio.setVisibility(View.VISIBLE);
         }
     }
-
-
 
     private void mostrarSolicitudes(QuerySnapshot querySnapshot) {
         LayoutInflater inflater = LayoutInflater.from(this);
@@ -147,46 +152,19 @@ public class solicitudes_pendientes extends AppCompatActivity {
             View cardView = inflater.inflate(R.layout.item_card_solicitud, containerSolicitudes, false);
 
 
-            String profesorID = doc.getString("profesorID");
-
-
-            db.collection("profesores").document(profesorID)
-                    .get()
-                    .addOnSuccessListener(profesorDoc -> {
-                        String nombreProfesor = profesorDoc.getString("Nombre");
-                        // Set the professor's name in the card's TextView
-                        ((TextView) cardView.findViewById(R.id.tv_maestro)).setText(nombreProfesor != null ? nombreProfesor : "Nombre no disponible");
-                    })
-                    .addOnFailureListener(e -> Log.e("Firestore", "Error getting professor name", e));
-
+            String nombreProfesor = doc.getString("profesorName");
+            ((TextView) cardView.findViewById(R.id.tv_maestro))
+                    .setText(nombreProfesor != null ? nombreProfesor : "Nombre no disponible");
 
             ((TextView) cardView.findViewById(R.id.tv_materia)).setText(doc.getString("materia"));
             ((TextView) cardView.findViewById(R.id.tv_salon)).setText(doc.getString("aula"));
             ((TextView) cardView.findViewById(R.id.tv_turno)).setText(doc.getString("turno"));
             ((TextView) cardView.findViewById(R.id.tv_grupo)).setText(doc.getString("grupo"));
+            ((TextView) cardView.findViewById(R.id.tv_horarios)).setText(doc.getString("horario"));
 
-
-            Object horarios = doc.get("horariosSeleccionados");
-            TextView tvHorarios = cardView.findViewById(R.id.tv_horarios);
-
-            if (horarios instanceof List<?>) {
-                List<?> listaHorarios = (List<?>) horarios;
-                StringBuilder horariosTexto = new StringBuilder();
-                for (Object h : listaHorarios) {
-                    if (h != null) {
-                        horariosTexto.append(h.toString()).append("\n");
-                    }
-                }
-                tvHorarios.setText(horariosTexto.toString().trim());
-            } else {
-                tvHorarios.setText("No hay horarios seleccionados");
-            }
-
-            // cargar status
             TextView tvStatus = cardView.findViewById(R.id.tv_status);
             String status = doc.getString("status");
             tvStatus.setText(status != null ? status : "Pendiente");
-
 
             containerSolicitudes.addView(cardView);
         }

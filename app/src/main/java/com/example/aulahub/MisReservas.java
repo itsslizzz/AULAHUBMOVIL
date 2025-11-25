@@ -40,7 +40,7 @@ public class MisReservas extends AppCompatActivity {
         String uid = mAuth.getCurrentUser().getUid();
 
         db.collection("reservas")
-                .whereEqualTo("profesorID", uid)
+                .whereEqualTo("ProfesorUID", uid)
                 .get()
                 .addOnSuccessListener(this::mostrarReservas)
                 .addOnFailureListener(e -> e.printStackTrace());
@@ -50,7 +50,7 @@ public class MisReservas extends AppCompatActivity {
         LayoutInflater inflater = LayoutInflater.from(this);
         containerReservas.removeAllViews();
 
-        // Si no hay reservas → mostrar mensaje vacío
+        // Si no hay reservas mostrar mensaje vacío
         if (querySnapshot == null || querySnapshot.isEmpty()) {
             tvVacio.setVisibility(View.VISIBLE);
             return;
@@ -66,24 +66,7 @@ public class MisReservas extends AppCompatActivity {
             ((TextView) cardView.findViewById(R.id.tv_salon)).setText(doc.getString("aula"));
             ((TextView) cardView.findViewById(R.id.tv_turno)).setText(doc.getString("turno"));
             ((TextView) cardView.findViewById(R.id.tv_grupo)).setText(doc.getString("grupo"));
-
-            Object horarios = doc.get("horariosSeleccionados");
-            TextView tvHorarios = cardView.findViewById(R.id.tv_horarios);
-
-            if (horarios instanceof List<?>) {
-                List<?> listaHorarios = (List<?>) horarios;
-
-                StringBuilder horariosTexto = new StringBuilder();
-                for (Object h : listaHorarios) {
-                    if (h != null) {
-                        horariosTexto.append(h.toString()).append("\n");
-                    }
-                }
-
-                tvHorarios.setText(horariosTexto.toString().trim());
-            } else {
-                tvHorarios.setText("No hay horarios seleccionados");
-            }
+            ((TextView) cardView.findViewById(R.id.tv_horarios)).setText(doc.getString("horario"));
 
             TextView tvStatus = cardView.findViewById(R.id.tv_status);
             String status = doc.getString("status");
