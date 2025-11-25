@@ -116,7 +116,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
-            
+
         } else if (isAdmin&& "Auditorio".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
             db.collection("reservas")
                     .whereEqualTo("status", "Pendiente")
@@ -125,7 +125,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .get()
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
-            
+
         }
     }
 
