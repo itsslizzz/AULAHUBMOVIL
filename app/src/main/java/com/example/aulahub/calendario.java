@@ -1,5 +1,6 @@
 package com.example.aulahub;
 
+import android.app.AlertDialog;
 import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
@@ -19,6 +20,7 @@ import android.widget.Toast;
 
 import androidx.core.content.ContextCompat;
 
+import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import java.text.SimpleDateFormat;
@@ -100,7 +102,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         //Obetner valores de la variables exportardas de otras actividades
 
         // recuperara el valor de la variable admin de HomeActivity
-        boolean isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
         ocultarObjetos(isAdmin);
 
         // --- Mostrar nombre, módulo e imagen ---
@@ -195,6 +197,9 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
         // Navegación de semanas
         btnSemanaAnterior.setOnClickListener(v -> {
+            horariosSeleccionados.clear();
+            tvFechasSeleccionadas.setText("");
+            tvFechasSeleccionadas.setVisibility(View.GONE);
             semanaActualInicio.add(Calendar.WEEK_OF_YEAR, -1);
             String turnoActual = spTurno.getSelectedItem().toString();
             String[] horasTurno = obtenerHorasPorTurno(turnoActual);
@@ -202,6 +207,9 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         });
 
         btnSemanaSiguiente.setOnClickListener(v -> {
+            horariosSeleccionados.clear();
+            tvFechasSeleccionadas.setText("");
+            tvFechasSeleccionadas.setVisibility(View.GONE);
             semanaActualInicio.add(Calendar.WEEK_OF_YEAR, 1);
             String turnoActual = spTurno.getSelectedItem().toString();
             String[] horasTurno = obtenerHorasPorTurno(turnoActual);
@@ -234,57 +242,93 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             btnContinuar.performClick();
         }
 
+
         // --- Guardar reserva en Firestore ---
         btn_Reservar.setOnClickListener(v -> {
             Log.d("Reservas", "Botón Reservar presionado");
 
-            String turnoSeleccionado = spTurno.getSelectedItem().toString();
+            String turnoSeleccionado   = spTurno.getSelectedItem().toString();
             String materiaSeleccionada = spMateria.getSelectedItem().toString();
-            String grupoSeleccionado = spAula.getSelectedItem().toString();
-            String aulaSeleccionada = tvRoomName.getText().toString();
-            String profesorID = mAuth.getCurrentUser().getUid();
+            String grupoSeleccionado   = spAula.getSelectedItem().toString();
+            String aulaSeleccionada    = tvRoomName.getText().toString();
             String fechasSeleccionadas = tvFechasSeleccionadas.getText().toString();
 
-            Map<String, Object> reserva = new HashMap<>();
-            reserva.put("profesorID", profesorID);
-            reserva.put("materia", materiaSeleccionada);
-            reserva.put("grupo", grupoSeleccionado);
-            reserva.put("aula", aulaSeleccionada);
-            reserva.put("turno", turnoSeleccionado);
-            reserva.put("fechas", fechasSeleccionadas);
-            reserva.put("status", "Pendiente");
-            // esta condiccion sirve para que el usuario elija una hora para que pueda reservar
+            // Validaciones primero
             if (fechasSeleccionadas.isEmpty()){
                 Toast.makeText(this, "Selecciona un horario", Toast.LENGTH_SHORT).show();
                 return;
             }
-            reserva.put("horariosSeleccionados", horariosSeleccionados);
-            // esta condiccion sirve para que el usuario ellja un rango de fechas para poder reservar
             if (horariosSeleccionados.isEmpty()){
                 Toast.makeText(this, "Selecciona un rango de fechas", Toast.LENGTH_SHORT).show();
                 return;
             }
-            reserva.put("timestamp", new Date());
 
-            mFirestore.collection("reservas")
-                    .add(reserva)
-                    .addOnSuccessListener(docRef -> {
-                        Log.d("Reservas", "Reserva guardada con ID: " + docRef.getId());
+            mFirestore.collection("profesores").document(uid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        String teacherName = null;
+                        if (documentSnapshot.exists()){
+                            teacherName = documentSnapshot.getString("Nombre");
+                        }
+
+                        // Copiamos para no tocar la lista original
+                        List<String> copiaHorarios = new ArrayList<>(horariosSeleccionados);
+
+                        for (String claveHorario : copiaHorarios) {
+
+                            // claveHorario = "yyyy-MM-dd 07:00 - 08:00"
+                            String fechaSolo = "";
+                            int espacio = claveHorario.indexOf(" ");
+                            if (espacio > 0) {
+                                fechaSolo = claveHorario.substring(0, espacio); // "yyyy-MM-dd"
+                            }
+
+                            Map<String, Object> reserva = new HashMap<>();
+                            reserva.put("ProfesorUID", uid);
+                            reserva.put("profesorName", teacherName);
+                            reserva.put("materia", materiaSeleccionada);
+                            reserva.put("grupo", grupoSeleccionado);
+                            reserva.put("aula", aulaSeleccionada);
+                            reserva.put("turno", turnoSeleccionado);
+
+                            // Guardamos uno por horario
+                            reserva.put("fecha", fechaSolo);
+                            reserva.put("horario", claveHorario); // "yyyy-MM-dd 07:00 - 08:00"
+
+                            reserva.put("status", "Pendiente");
+                            reserva.put("timestamp", new Date());
+
+                            mFirestore.collection("reservas")
+                                    .add(reserva)
+                                    .addOnSuccessListener(docRef -> {
+                                        Log.d("Reservas", "Reserva guardada con ID: " + docRef.getId());
+                                    })
+                                    .addOnFailureListener(e -> {
+                                        Log.e("Reservas", "Error guardando reserva", e);
+                                        Toast.makeText(this, "Error al guardar la reserva", Toast.LENGTH_SHORT).show();
+                                    });
+                        }
+
+                        // Aquí ya puedes lanzar la pantalla de confirmación si quieres,
+                        // pasando la lista de horariosSeleccionados como ya lo haces.
+                        Intent intent = new Intent(calendario.this, ConfirmacionActivity.class);
+                        intent.putExtra("materia", materiaSeleccionada);
+                        intent.putExtra("aula", aulaSeleccionada);
+                        intent.putExtra("grupo", grupoSeleccionado);
+                        intent.putExtra("turno", turnoSeleccionado);
+                        intent.putExtra("fechas", fechasSeleccionadas);
+                        intent.putStringArrayListExtra(
+                                "horarios",
+                                new ArrayList<>(horariosSeleccionados)
+                        );
+                        startActivity(intent);
                     })
                     .addOnFailureListener(e -> {
-                        Log.e("Reservas", "Error guardando reserva", e);
+                        Log.e("Profesor", "Error al obtener el profesor", e);
+                        Toast.makeText(this, "Error al obtener datos del profesor", Toast.LENGTH_SHORT).show();
                     });
 
-            Intent intent = new Intent(calendario.this, ConfirmacionActivity.class);
-            intent.putExtra("materia", materiaSeleccionada);
-            intent.putExtra("aula", aulaSeleccionada);
-            intent.putExtra("grupo", grupoSeleccionado);
-            intent.putExtra("turno", turnoSeleccionado);
-            intent.putExtra("fechas", fechasSeleccionadas);
-            intent.putStringArrayListExtra("horarios", new ArrayList<>(horariosSeleccionados));
-
-            startActivity(intent);
         });
+
     }
 
     // Devuelve el arreglo de horas según el turno
@@ -364,17 +408,26 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                 }
 
                 celda.setOnClickListener(v -> {
+                    // Si es admin: mostrar popup con reservas de ese horario
+                    if (isAdmin) {
+                        mostrarReservas(clave);
+                        return;
+                    }
+
                     if (horariosSeleccionados.contains(clave)) {
+                        // ya estaba seleccionado -> lo quitamos
                         horariosSeleccionados.remove(clave);
                         celda.setBackgroundTintList(
                                 ContextCompat.getColorStateList(this, R.color.Azul_Fic)
                         );
                     } else {
+                        // no había nada (o solo este mismo) -> lo seleccionamos
                         horariosSeleccionados.add(clave);
                         celda.setBackgroundTintList(
                                 ContextCompat.getColorStateList(this, R.color.Cafe_Fic)
                         );
                     }
+
                     actualizarTextoFechas(tvFechasSeleccionadas, horariosSeleccionados);
                     Log.d("Horarios", "Seleccionados: " + horariosSeleccionados);
                 });
@@ -463,4 +516,114 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             btnContinuar.setVisibility(View.GONE);
         }
     }
+    private void mostrarReservas(String claveHorario) {
+
+        mFirestore.collection("reservas")
+                .whereEqualTo("horario", claveHorario)
+                .whereEqualTo("status", "Pendiente")
+                .get()
+                .addOnSuccessListener(querySnapshot -> {
+                    if (querySnapshot.isEmpty()) {
+                        new AlertDialog.Builder(calendario.this)
+                                .setTitle("Reservas para " + claveHorario)
+                                .setMessage("No hay reservas para este horario.")
+                                .setPositiveButton("Cerrar", null)
+                                .show();
+                        return;
+                    }
+
+                    List<DocumentSnapshot> docs = querySnapshot.getDocuments();
+                    List<String> descripciones = new ArrayList<>();
+
+                    for (DocumentSnapshot doc : docs) {
+                        String materia = doc.getString("materia");
+                        String grupo   = doc.getString("grupo");
+                        String status  = doc.getString("status");
+                        String horario = doc.getString("horario");
+
+                        StringBuilder linea = new StringBuilder();
+                        linea.append(materia != null ? materia : "Sin materia");
+                        if (grupo != null && !grupo.isEmpty()) {
+                            linea.append(" - ").append(grupo);
+                        }
+                        if (status != null && !status.isEmpty()) {
+                            linea.append(" [").append(status).append("]");
+                        }
+                        if (horario != null && !horario.isEmpty()) {
+                            linea.append("\n").append(horario);
+                        }
+
+                        descripciones.add(linea.toString());
+                    }
+
+                    new AlertDialog.Builder(calendario.this)
+                            .setTitle("Reservas para " + claveHorario)
+                            .setItems(descripciones.toArray(new String[0]), (dialog, which) -> {
+                                DocumentSnapshot docSeleccionado = docs.get(which);
+                                mostrarDialogoAccionReserva(docSeleccionado);
+                            })
+                            .setNegativeButton("Cerrar", null)
+                            .show();
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Reservas", "Error consultando reservas", e);
+                    Toast.makeText(calendario.this, "Error al cargar reservas", Toast.LENGTH_SHORT).show();
+                });
+    }
+
+    private void mostrarDialogoAccionReserva(DocumentSnapshot doc) {
+        String materia  = doc.getString("materia");
+        String grupo    = doc.getString("grupo");
+        String turno    = doc.getString("turno");
+        String aula     = doc.getString("aula");
+        String fecha    = doc.getString("fecha");
+        String status   = doc.getString("status");
+        String profesor = doc.getString("profesorName");
+        String horario  = doc.getString("horario");
+
+        StringBuilder mensaje = new StringBuilder();
+        mensaje.append("Materia: ").append(materia != null ? materia : "N/A").append("\n");
+        mensaje.append("Grupo: ").append(grupo != null ? grupo : "N/A").append("\n");
+        mensaje.append("Aula: ").append(aula != null ? aula : "N/A").append("\n");
+        mensaje.append("Turno: ").append(turno != null ? turno : "N/A").append("\n");
+        mensaje.append("Fecha: ").append(fecha != null ? fecha : "N/A").append("\n");
+        mensaje.append("Horario: ").append(horario != null ? horario : "N/A").append("\n");
+        mensaje.append("Status: ").append(status != null ? status : "Pendiente").append("\n");
+        mensaje.append("Profesor: ").append(profesor != null ? profesor : "N/A");
+
+        new AlertDialog.Builder(calendario.this)
+                .setTitle("Detalle de reserva")
+                .setMessage(mensaje.toString())
+                .setPositiveButton("Aceptar", (dialog, which) -> {
+                    actualizarStatusReserva(doc.getId(), "Aceptada");
+                })
+                .setNegativeButton("Rechazar", (dialog, which) -> {
+                    actualizarStatusReserva(doc.getId(), "Rechazada");
+                })
+                .setNeutralButton("Cerrar", null)
+                .show();
+    }
+
+    private void actualizarStatusReserva(String reservaId, String nuevoStatus) {
+        mFirestore.collection("reservas")
+                .document(reservaId)
+                .update("status", nuevoStatus)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(
+                            calendario.this,
+                            "Reserva " + nuevoStatus,
+                            Toast.LENGTH_SHORT
+                    ).show();
+                    Log.d("Reservas", "Status actualizado a " + nuevoStatus);
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Reservas", "Error actualizando status", e);
+                    Toast.makeText(
+                            calendario.this,
+                            "Error al actualizar la reserva",
+                            Toast.LENGTH_SHORT
+                    ).show();
+                });
+    }
+
 }

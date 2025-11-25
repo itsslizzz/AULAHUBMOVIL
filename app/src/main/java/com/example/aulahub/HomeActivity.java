@@ -22,6 +22,7 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.messaging.FirebaseMessaging;
 
 
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
@@ -59,6 +60,27 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         CardView mAuditorio = findViewById(R.id.card_auditorio);
 
         aplicarRestricciones(isAdmin, Aula);
+
+        // obetner el FCM token
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(task -> {
+                    if (!task.isSuccessful()) {
+                        Log.w("FCM", "Error obteniendo token", task.getException());
+                        return;
+                    }
+
+                    // ESTE es el famoso FCM token
+                    String token = task.getResult();
+                    Log.d("FCM", "Token FCM: " + token);
+
+                    // Si el usuario actual es PROFESOR:
+                    mFirestore.collection("profesores")
+                            .document(uid)                // tu “pura llave”
+                            .update("fcmToken", token);   // aquí se guarda
+
+                    // Si fuera ADMIN:
+                    // mFirestore.collection("admins").document(uid).update("fcmToken", token);
+                });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.home), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());

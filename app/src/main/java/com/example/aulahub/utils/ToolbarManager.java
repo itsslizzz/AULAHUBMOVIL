@@ -56,7 +56,6 @@ public class ToolbarManager extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         uid = mAuth.getUid();
         user = mAuth.getCurrentUser();
-
         // Cargar rol del usuario una sola vez
         cargarRolUsuario();
     }
@@ -110,7 +109,10 @@ public class ToolbarManager extends AppCompatActivity {
         PopupMenu popupMenu = new PopupMenu(this, mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
 
-
+        if (isAdmin){
+            popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
+            popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
+        }
 
 
 
