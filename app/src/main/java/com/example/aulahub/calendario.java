@@ -41,6 +41,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
     // Semana que se está mostrando (inicio en lunes)
     private Calendar semanaActualInicio;
+    private String aulaActual;
 
     // Horarios por turno
     private final String[] HORAS_MATUTINO = {
@@ -109,6 +110,8 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         String roomName = getIntent().getStringExtra("roomName");
         if (roomName == null || roomName.isEmpty()) roomName = "Aula";
         tvRoomName.setText(roomName);
+
+        aulaActual = roomName;
 
         String modulo = getIntent().getStringExtra("modulo");
         if (modulo == null || modulo.isEmpty()) modulo = "Módulo desconocido";
@@ -395,6 +398,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
                 Button celda = new Button(this);
                 celda.setText(""); // si quieres, aquí puedes mostrar algo
+                celda.setTag(clave);
 
                 // Color según si está seleccionado o no
                 if (horariosSeleccionados.contains(clave)) {
@@ -450,6 +454,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         tvRangoSemana.setText(rango);
 
         actualizarTextoFechas(tvFechasSeleccionadas, horariosSeleccionados);
+        cargarReservasAceptadasSemana();
     }
 
     // Actualiza el TextView donde muestras las fechas seleccionadas
@@ -507,13 +512,13 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             btnContinuar.setVisibility(View.VISIBLE);
         } else {
             tv_horarios.setVisibility(View.GONE);
-            tvturno.setVisibility(View.GONE);
+
             tvgrupo.setVisibility(View.GONE);
             tvmateria.setVisibility(View.GONE);
-            spTurno.setVisibility(View.GONE);
+
             spAula.setVisibility(View.GONE);
             spMateria.setVisibility(View.GONE);
-            btnContinuar.setVisibility(View.GONE);
+
         }
     }
     private void mostrarReservas(String claveHorario) {
@@ -560,7 +565,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                             .setTitle("Reservas para " + claveHorario)
                             .setItems(descripciones.toArray(new String[0]), (dialog, which) -> {
                                 DocumentSnapshot docSeleccionado = docs.get(which);
-                                mostrarDialogoAccionReserva(docSeleccionado);
+                                mostrarDialogoAccionReserva(docSeleccionado );
                             })
                             .setNegativeButton("Cerrar", null)
                             .show();
@@ -579,7 +584,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         String fecha    = doc.getString("fecha");
         String status   = doc.getString("status");
         String profesor = doc.getString("profesorName");
-        String horario  = doc.getString("horario");
+        String horario  = doc.getString("horario");   // ESTA ES LA CLAVE DEL HORARIO
 
         StringBuilder mensaje = new StringBuilder();
         mensaje.append("Materia: ").append(materia != null ? materia : "N/A").append("\n");
@@ -595,16 +600,21 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                 .setTitle("Detalle de reserva")
                 .setMessage(mensaje.toString())
                 .setPositiveButton("Aceptar", (dialog, which) -> {
-                    actualizarStatusReserva(doc.getId(), "Aceptada");
+                    actualizarStatusReserva(doc.getId(), "Aceptada", horario, profesor, aula);
                 })
                 .setNegativeButton("Rechazar", (dialog, which) -> {
-                    actualizarStatusReserva(doc.getId(), "Rechazada");
+                    actualizarStatusReserva(doc.getId(), "Rechazada", horario, profesor, aula);
                 })
                 .setNeutralButton("Cerrar", null)
                 .show();
     }
 
-    private void actualizarStatusReserva(String reservaId, String nuevoStatus) {
+
+    private void actualizarStatusReserva(String reservaId,
+                                         String nuevoStatus,
+                                         String claveHorario,
+                                         String profesorName,
+                                         String Aula) {
         mFirestore.collection("reservas")
                 .document(reservaId)
                 .update("status", nuevoStatus)
@@ -615,6 +625,28 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                             Toast.LENGTH_SHORT
                     ).show();
                     Log.d("Reservas", "Status actualizado a " + nuevoStatus);
+
+                    if ("Aceptada".equals(nuevoStatus)) {
+                        // 1) Pintar y BLOQUEAR la celda
+                        pintarCeldaAceptada(claveHorario, profesorName);
+
+                        // 2) Rechazar el resto de reservas pendientes en ese mismo horario y aula
+                        mFirestore.collection("reservas")
+                                .whereEqualTo("horario", claveHorario)
+                                .whereEqualTo("status", "Pendiente")
+                                .whereEqualTo("aula", Aula)
+                                .get()
+                                .addOnSuccessListener(snapshot -> {
+                                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                                        if (!doc.getId().equals(reservaId)) {
+                                            doc.getReference().update("status", "Rechazada");
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(e -> {
+                                    Log.e("Reservas", "Error rechazando reservas restantes", e);
+                                });
+                    }
                 })
                 .addOnFailureListener(e -> {
                     Log.e("Reservas", "Error actualizando status", e);
@@ -625,5 +657,91 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                     ).show();
                 });
     }
+
+
+    private void pintarCeldaAceptada(String claveHorario, String profesorName) {
+        TableLayout tlSemana = findViewById(R.id.tlSemana);
+
+        for (int i = 1; i < tlSemana.getChildCount(); i++) { // i=1 para saltar la fila header
+            TableRow fila = (TableRow) tlSemana.getChildAt(i);
+
+            for (int j = 1; j < fila.getChildCount(); j++) { // j=1 para saltar la columna "Hora"
+                View v = fila.getChildAt(j);
+                if (!(v instanceof Button)) continue;
+
+                Button celda = (Button) v;
+                Object tag = celda.getTag();
+                if (tag == null) continue;
+
+                if (claveHorario.equals(tag.toString())) {
+                    // Fondo rojo para aceptada
+                    celda.setBackgroundTintList(
+                            ContextCompat.getColorStateList(this, R.color.Rechazar)
+                    );
+
+                    // Texto con info del profesor (puedes añadir materia/grupo si quieres)
+                    if (profesorName != null && !profesorName.isEmpty()) {
+                        celda.setText(profesorName);
+                    } else {
+                        celda.setText("Reservado");
+                    }
+
+                    celda.setEnabled(false);
+
+                    Log.d("Reservas", "Celda encontrada y pintada para " + claveHorario);
+                    return; // ya la encontramos, nos vamos
+                }
+            }
+        }
+
+        Log.w("Reservas", "No se encontró celda para horario " + claveHorario);
+    }
+
+    private void cargarReservasAceptadasSemana() {
+        if (aulaActual == null || aulaActual.isEmpty()) {
+            Log.w("Reservas", "aulaActual vacío, no se cargan reservas");
+            return;
+        }
+
+        SimpleDateFormat formatoFecha =
+                new SimpleDateFormat("yyyy-MM-dd", new Locale("es", "ES"));
+
+        String fechaInicio = formatoFecha.format(semanaActualInicio.getTime());
+        Calendar finSemana = (Calendar) semanaActualInicio.clone();
+        finSemana.add(Calendar.DAY_OF_MONTH, 6);
+        String fechaFin = formatoFecha.format(finSemana.getTime());
+
+        Log.d("Reservas", "Buscando aceptadas para aula=" + aulaActual +
+                " entre " + fechaInicio + " y " + fechaFin);
+
+        mFirestore.collection("reservas")
+                .whereGreaterThanOrEqualTo("fecha", fechaInicio)
+                .whereLessThanOrEqualTo("fecha", fechaFin)
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    Log.d("Reservas", "Total docs en rango semana: " + snapshot.size());
+
+                    for (DocumentSnapshot doc : snapshot.getDocuments()) {
+                        String aula = doc.getString("aula");
+                        String status = doc.getString("status");
+                        String horario = doc.getString("horario");
+                        String profesor = doc.getString("profesorName");
+
+                        // Filtramos en cliente
+                        if (!"Aceptada".equals(status)) continue;
+                        if (aula == null || !aula.equals(aulaActual)) continue;
+                        if (horario == null) continue;
+
+                        Log.d("Reservas", "Pintando horario " + horario +
+                                " profesor=" + profesor);
+
+                        pintarCeldaAceptada(horario, profesor);
+                    }
+                })
+                .addOnFailureListener(e -> {
+                    Log.e("Reservas", "Error cargando reservas aceptadas", e);
+                });
+    }
+
 
 }
