@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Handler;
 import android.util.Log;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -45,8 +46,8 @@ public class ToolbarManager extends AppCompatActivity {
 
     // DATOS DE ROL
     protected boolean isAdmin = false;
-    protected String aulaAdmin = "";
-    protected String horarioAdmin = "";
+    protected String Aula = "";
+    protected String Horario = "";
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,43 +57,6 @@ public class ToolbarManager extends AppCompatActivity {
         mStorage = FirebaseStorage.getInstance();
         uid = mAuth.getUid();
         user = mAuth.getCurrentUser();
-        // Cargar rol del usuario una sola vez
-        cargarRolUsuario();
-    }
-
-    private void cargarRolUsuario() {
-        if (user == null) return;
-
-        mFirestore.collection("roles")
-                .document(uid)
-                .get()
-                .addOnSuccessListener(doc -> {
-                    if (doc.exists()) {
-                        isAdmin = Boolean.TRUE.equals(doc.getBoolean("admin"));
-                        aulaAdmin = doc.getString("Aula");
-                        horarioAdmin = doc.getString("Horario");
-
-                        Log.d("Toolbar", "Rol cargado -> isAdmin=" + isAdmin +
-                                ", Aula=" + aulaAdmin +
-                                ", Horario=" + horarioAdmin);
-                    } else {
-                        Log.d("Toolbar", "Usuario sin documento en 'roles'");
-                    }
-                })
-                .addOnFailureListener(e ->
-                        Log.e("Toolbar", "Error al leer 'roles': ", e)
-                );
-    }
-
-    protected void inicializarToolbar(ImageView fotoPerfil, ImageButton imageButton) {
-        this.mFotoPerfil = fotoPerfil;
-        this.mImageButton = imageButton;
-
-        String uid = mAuth.getCurrentUser().getUid();
-        String email = mAuth.getCurrentUser().getEmail();
-
-        cargarFotoPerfil(uid);
-
         imagePickerLauncher = registerForActivityResult(
                 new ActivityResultContracts.StartActivityForResult(),
                 result -> {
@@ -105,14 +69,32 @@ public class ToolbarManager extends AppCompatActivity {
                     }
                 });
 
+
+    }
+
+
+
+    protected void inicializarToolbar(ImageView fotoPerfil, ImageButton imageButton) {
+        this.mFotoPerfil = fotoPerfil;
+        this.mImageButton = imageButton;
+
+         uid = mAuth.getCurrentUser().getUid();
+        String email = mAuth.getCurrentUser().getEmail();
+
+        cargarFotoPerfil(uid);
+
+
+
+
         // Menú principal
         PopupMenu popupMenu = new PopupMenu(this, mImageButton);
         popupMenu.getMenuInflater().inflate(R.menu.menu_popup, popupMenu.getMenu());
 
-        if (isAdmin){
-            popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
-            popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
-        }
+
+            if (isAdmin) {
+                popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
+                popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
+            }
 
 
 
@@ -135,12 +117,12 @@ public class ToolbarManager extends AppCompatActivity {
             } else if (id == R.id.ItemSolicitudesPendientes) {
                 Intent i = new Intent(this, solicitudes_pendientes.class);
                 i.putExtra("isAdmin", isAdmin);
-                i.putExtra("Aula", aulaAdmin);
-                i.putExtra("Horario", horarioAdmin);
+                i.putExtra("Aula", Aula);
+                i.putExtra("Horario", Horario);
 
                 Log.d("Toolbar", "Enviando -> isAdmin=" + isAdmin +
-                        ", Aula=" + aulaAdmin +
-                        ", Horario=" + horarioAdmin);
+                        ", Aula=" + Aula +
+                        ", Horario=" + Horario);
 
                 startActivity(i);
                 return true;

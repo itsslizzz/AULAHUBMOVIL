@@ -1,6 +1,9 @@
+
 package com.example.aulahub;
 
 
+
+import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -10,6 +13,7 @@ import android.widget.ImageButton;
 import android.widget.ImageView;
 
 import androidx.activity.EdgeToEdge;
+import androidx.annotation.NonNull;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -17,7 +21,9 @@ import androidx.core.view.WindowInsetsCompat;
 
 
 import com.example.aulahub.utils.ToolbarManager;
+import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnSuccessListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 
@@ -27,9 +33,6 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
-    private boolean isAdmin = false;
-    private String Aula;
-    private String Horario;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,10 +43,6 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
 
-        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
-        Aula = getIntent().getStringExtra("Aula");
-        Horario = getIntent().getStringExtra("Horario");
-
         if (user == null){
             Intent intent =  new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -51,36 +50,61 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             return;
         }
 
-        inicializarToolbar(mFotoPerfil, mImageButton);
 
+
+        //obtener datos del login
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        Aula = getIntent().getStringExtra("Aula");
+        Horario = getIntent().getStringExtra("Horario");
+
+        // 2) Consultar Firestore SOLO para completar/validar
+        if (mAuth.getCurrentUser() != null) {
+            String currentUid = mAuth.getCurrentUser().getUid();
+
+            mFirestore.collection("roles").document(currentUid).get()
+                    .addOnSuccessListener(documentSnapshot -> {
+                        if (documentSnapshot.exists()) {
+                            Boolean adminDb = documentSnapshot.getBoolean("admin");
+
+                            if (Boolean.TRUE.equals(adminDb)) {
+                                // Usuario admin
+                                isAdmin = true;
+                                Aula    = documentSnapshot.getString("Aula");
+                                Horario = documentSnapshot.getString("horario");
+                                aplicarRestricciones(true, Aula);
+                            } else {
+                                isAdmin = false;
+                                aplicarRestricciones(false, Aula);
+                            }
+                        } else {
+                            // NO está en roles (probablemente profesor)
+                            aplicarRestricciones(isAdmin, Aula);
+                            // isAdmin y Aula vienen del Intent del login
+                        }
+
+                        // En TODOS los casos de éxito inicializamos toolbar
+                        inicializarToolbar(mFotoPerfil, mImageButton);
+                    })
+                    .addOnFailureListener(e -> {
+                        Log.e("HomeActivity", "Error leyendo roles", e);
+
+                        // Si falla la lectura, al menos usamos lo que venga del Intent
+                        aplicarRestricciones(isAdmin, Aula);
+                        inicializarToolbar(mFotoPerfil, mImageButton);
+                    });
+        } else {
+            // No debería pasar si ya comprobaste user arriba, pero por si acaso
+            aplicarRestricciones(isAdmin, Aula);
+            inicializarToolbar(mFotoPerfil, mImageButton);
+        }
+
+
+        getToken();
         // Recuperar los CardView
         CardView mCardAulaA = findViewById(R.id.card_aulaA);
         CardView mCardAulaB = findViewById(R.id.card_aulaB);
         CardView mCardAulaC = findViewById(R.id.card_aulaC);
         CardView mAuditorio = findViewById(R.id.card_auditorio);
-
-        aplicarRestricciones(isAdmin, Aula);
-
-        // obetner el FCM token
-        FirebaseMessaging.getInstance().getToken()
-                .addOnCompleteListener(task -> {
-                    if (!task.isSuccessful()) {
-                        Log.w("FCM", "Error obteniendo token", task.getException());
-                        return;
-                    }
-
-                    // ESTE es el famoso FCM token
-                    String token = task.getResult();
-                    Log.d("FCM", "Token FCM: " + token);
-
-                    // Si el usuario actual es PROFESOR:
-                    mFirestore.collection("profesores")
-                            .document(uid)                // tu “pura llave”
-                            .update("fcmToken", token);   // aquí se guarda
-
-                    // Si fuera ADMIN:
-                    // mFirestore.collection("admins").document(uid).update("fcmToken", token);
-                });
 
         ViewCompat.setOnApplyWindowInsetsListener(findViewById(R.id.home), (v, insets) -> {
             Insets systemBars = insets.getInsets(WindowInsetsCompat.Type.systemBars());
@@ -166,5 +190,36 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     break;
             }
         }
+    }
+
+    public void getToken(){
+
+        FirebaseMessaging.getInstance().getToken()
+                .addOnCompleteListener(new OnCompleteListener<String>() {
+                    @Override
+                    public void onComplete(@NonNull Task<String> task) {
+                        if (!task.isSuccessful()) {
+                            Log.w(TAG, "Fetching FCM registration token failed", task.getException());
+                            return;
+                        }
+
+                        // Get new FCM registration token
+                        String token = task.getResult();
+                        Log.d("FCM", "Token FCM: " + token);
+                        if (isAdmin){
+
+                            mFirestore.collection("roles").document(uid).update("fcmToken", token);
+
+                        }else {
+                            // Si el usuario actual es PROFESOR:
+                            mFirestore.collection("profesores")
+                                    .document(uid)                // tu “pura llave”
+                                    .update("fcmToken", token);   // aquí se guarda
+                        }
+
+                    }
+                });
+
+
     }
 }
