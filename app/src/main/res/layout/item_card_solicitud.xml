@@ -179,6 +179,7 @@
             android:paddingVertical="4dp">
 
             <Button
+                android:id="@+id/btn_aceptar_solicitud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/margin_20dp"
@@ -189,6 +190,7 @@
                 android:backgroundTint="@color/Aceptar"/>
 
             <Button
+                android:id="@+id/btn_rechazar_solicitud"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="70dp"

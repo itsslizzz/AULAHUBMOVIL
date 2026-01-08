@@ -6,6 +6,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
@@ -166,7 +167,54 @@ public class solicitudes_pendientes extends AppCompatActivity {
             String status = doc.getString("status");
             tvStatus.setText(status != null ? status : "Pendiente");
 
+            // --- Lógica para botones Aceptar y Rechazar ---
+            cardView.findViewById(R.id.btn_aceptar_solicitud).setOnClickListener(v -> {
+                actualizarEstadoReserva(doc, "Aceptada");
+            });
+
+            cardView.findViewById(R.id.btn_rechazar_solicitud).setOnClickListener(v -> {
+                actualizarEstadoReserva(doc, "Rechazada");
+            });
+
             containerSolicitudes.addView(cardView);
         }
+    }
+
+    // Método para actualizar Firestore y disparar el cambio en el calendario
+    private void actualizarEstadoReserva(DocumentSnapshot doc, String nuevoEstado) {
+        String idReserva = doc.getId();
+        String horario = doc.getString("horario");
+        String aula = doc.getString("aula");
+
+        db.collection("reservas").document(idReserva)
+                .update("status", nuevoEstado)
+                .addOnSuccessListener(aVoid -> {
+                    Toast.makeText(this, "Reserva " + nuevoEstado, Toast.LENGTH_SHORT).show();
+
+                    if ("Aceptada".equals(nuevoEstado)) {
+                        // Rechaza automáticamente conflictos (misma aula y horario)
+                        rechazarConflictos(horario, aula, idReserva);
+                    }
+
+                    // Recargar la lista para reflejar los cambios
+                    cargarSolicitudes();
+                })
+                .addOnFailureListener(e -> Log.e("Solicitudes", "Error al actualizar", e));
+    }
+
+    // Método para evitar doble reserva en el mismo espacio/tiempo
+    private void rechazarConflictos(String horario, String aula, String idExcluido) {
+        db.collection("reservas")
+                .whereEqualTo("horario", horario)
+                .whereEqualTo("aula", aula)
+                .whereEqualTo("status", "Pendiente")
+                .get()
+                .addOnSuccessListener(snapshot -> {
+                    for (DocumentSnapshot d : snapshot.getDocuments()) {
+                        if (!d.getId().equals(idExcluido)) {
+                            d.getReference().update("status", "Rechazada");
+                        }
+                    }
+                });
     }
 }

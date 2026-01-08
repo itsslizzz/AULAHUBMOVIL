@@ -2,7 +2,6 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,14 +12,11 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AULAHUB">
         <activity
+            android:name=".reglamento"
+            android:exported="false" />
+        <activity
             android:name=".solicitudes_pendientes"
-            android:exported="false">
-
-
-
-
-
-        </activity>
+            android:exported="false"></activity>
         <activity
             android:name=".MisReservas"
             android:exported="false" />
@@ -35,13 +31,6 @@
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
-
-
-
-
-
-
-
         </activity> <!-- Pantallas secundarias -->
         <activity
             android:name=".calendario"
@@ -55,7 +44,6 @@
         <activity
             android:name=".utils.ToolbarManager"
             android:exported="false" />
-
     </application>
 
 </manifest>

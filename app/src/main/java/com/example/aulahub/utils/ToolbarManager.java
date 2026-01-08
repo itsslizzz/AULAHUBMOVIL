@@ -21,6 +21,7 @@ import com.example.aulahub.AyudaActivity;
 import com.example.aulahub.LoginActivity;
 import com.example.aulahub.MisReservas;
 import com.example.aulahub.R;
+import com.example.aulahub.reglamento;
 import com.example.aulahub.solicitudes_pendientes;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
@@ -112,6 +113,10 @@ public class ToolbarManager extends AppCompatActivity {
 
             } else if (id == R.id.ItemMisReservas) {
                 startActivity(new Intent(this, MisReservas.class));
+                return true;
+
+            } else if (id == R.id.ItemReglamento) {
+                startActivity(new Intent(this, reglamento.class));
                 return true;
 
             } else if (id == R.id.ItemSolicitudesPendientes) {

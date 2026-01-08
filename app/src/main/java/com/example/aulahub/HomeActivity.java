@@ -33,7 +33,7 @@ import com.google.firebase.messaging.FirebaseMessaging;
 
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
-
+//inicio del OnCreate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -70,7 +70,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                                 // Usuario admin
                                 isAdmin = true;
                                 Aula    = documentSnapshot.getString("Aula");
-                                Horario = documentSnapshot.getString("horario");
+                                Horario = documentSnapshot.getString("Horario");
                                 aplicarRestricciones(true, Aula);
                             } else {
                                 isAdmin = false;
@@ -153,7 +153,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         mAuditorio.setOnClickListener(irAula_Horario);
 
 
-    }
+    } //terminacion de OnCreate
 
     private void aplicarRestricciones(boolean isAdmin, String Aula) {
         CardView mCardAulaA = findViewById(R.id.card_aulaA);
@@ -191,6 +191,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             }
         }
     }
+    // fin del OnCreate
 
     public void getToken(){
 
@@ -203,7 +204,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                             return;
                         }
 
-                        // Get new FCM registration token
+
                         String token = task.getResult();
                         Log.d("FCM", "Token FCM: " + token);
                         if (isAdmin){

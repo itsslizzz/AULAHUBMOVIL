@@ -35,6 +35,7 @@ public class LoginActivity extends AppCompatActivity {
     private String Email = "";
     private String Password = "";
 
+    //metodo onCreate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,7 +70,10 @@ public class LoginActivity extends AppCompatActivity {
             }
         });
     }
+    //terminacion del metodo Oncreate
 
+
+    //inicio del metodo LoginUser
     private void loginUser() {
         mAuth.signInWithEmailAndPassword(Email, Password).addOnCompleteListener(new OnCompleteListener<AuthResult>() {
             @Override
@@ -138,6 +142,9 @@ public class LoginActivity extends AppCompatActivity {
         });
     }
 
+    //terminacion del metodo LoginUser
+
+    //inicio del metodo OnStart
     @Override
     protected void onStart() {
         super.onStart();
@@ -149,3 +156,5 @@ public class LoginActivity extends AppCompatActivity {
         }
     }
 }
+
+//terminacion de OnStart

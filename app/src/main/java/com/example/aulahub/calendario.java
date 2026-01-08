@@ -61,6 +61,8 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             "18:00 - 19:00"
     };
 
+    //inicio onCreate
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -69,6 +71,8 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
         inicializarToolbar(mFotoPerfil, mImageButton);
+        isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+
 
         // --- Referencias ---
         Spinner spTurno = findViewById(R.id.spTurno);
@@ -332,7 +336,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
         });
 
-    }
+    }// terminacion del onCreate
 
     // Devuelve el arreglo de horas según el turno
     private String[] obtenerHorasPorTurno(String turno) {

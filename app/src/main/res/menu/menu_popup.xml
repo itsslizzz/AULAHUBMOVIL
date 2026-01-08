@@ -14,4 +14,8 @@
         android:id="@+id/ItemSolicitudesPendientes"
         android:title="@string/solicitudes_pendientes"/>
 
+    <item
+        android:id="@+id/ItemReglamento"
+        android:title="@string/reglamento"/>
+
 </menu>

@@ -1,0 +1,160 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <TextView
+        android:id="@+id/UAS"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/universidad_autonoma_de_sinaloa"
+        app:layout_constraintTop_toTopOf="parent"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="20sp"
+        android:layout_marginTop="20dp"
+        />
+
+    <TextView
+        android:id="@+id/FIC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/facultad_de_informatica_culiacan"
+        app:layout_constraintTop_toBottomOf="@id/UAS"
+        android:gravity="center"
+        android:textStyle="normal"
+        android:textSize="18sp"
+        android:layout_marginTop="7dp"
+        />
+
+    <com.google.android.material.divider.MaterialDivider
+        android:id="@+id/divider"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/FIC"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_marginTop="15dp"
+        android:layout_marginHorizontal="16dp"
+        app:dividerThickness="2dp"
+        app:dividerColor="@color/Cafe_Fic" />
+
+    <TextView
+        android:id="@+id/tvHorarios"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/HORARIOS"
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="7dp"
+        />
+
+    <TextView
+        android:id="@+id/tvLabAyB"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/laboratorio_de_computo_a_lunes_a_viernes_de_7_00_a_13_00_horas_y_de_14_00_a_20_00_horas"
+        app:layout_constraintTop_toBottomOf="@id/tvHorarios"
+        android:gravity="center"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <TextView
+        android:id="@+id/tvLabC"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="@string/laboratorio_de_computo_c_lunes_a_viernes_de_8_00_a_20_00_horas"
+        app:layout_constraintTop_toBottomOf="@id/tvLabAyB"
+        android:gravity="center"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <TextView
+        android:id="@+id/tvAuditorio"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Auditorio: Lunes a Viernes de 7:00 a 20:00 horas"
+        app:layout_constraintTop_toBottomOf="@id/tvLabC"
+        android:gravity="center"
+        android:textStyle="normal"
+        android:textSize="16sp"
+        android:layout_marginTop="7dp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        />
+
+    <TextView
+        android:id="@+id/tvReglamento"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="REGLAMENTO"
+        app:layout_constraintTop_toBottomOf="@id/tvAuditorio"
+        android:gravity="center"
+        android:textStyle="bold"
+        android:textSize="16sp"
+        android:layout_marginTop="7dp"
+        />
+
+    <TextView
+        android:id="@+id/tvReglamentoLista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintTop_toBottomOf="@id/tvReglamento"
+        android:text="1. Presentar credencial actualizada de la Facultad o Identificacion oficial (excepto para el auditorio).
+        \n2. Mantener buena conducta al interior.
+        \n3. Hacer uso adecuado del equipo y mobiliario.
+        \n4. Cuidar el mobiliario, sujetandose a los mecanismos de control, higiene, seguridad, y vigilancia.
+        \n5. Utilizar las instalaciones exclusivamente con propositos academicos.
+        \n6. No introducir ni consumir bebidas, alimentos, golosinas o cigarrillos.
+        \n7. Hablar en voz baja.
+        \n8. Reportar al encargado en caso de mal funcionamiento.
+        \n9. No sustraer material o equipo."
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:lineSpacingExtra="5dp"
+        android:layout_marginTop="10dp"/>
+
+
+    <TextView
+        android:id="@+id/tvNota"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Nota: en caso de incumplimiento de alguno de los puntos anteriores
+se podra sancionar al usuario con alguna de las siguientes medidas:"
+        app:layout_constraintTop_toBottomOf="@id/tvReglamentoLista"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="@dimen/Margin_Start_10dp"
+        android:textStyle="bold"
+        android:lineSpacingExtra="5dp"
+        />
+
+    <TextView
+        android:id="@+id/tvNotaLista"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="a) Desalojo.\nb) Suspension del uso de manera temporal o definitiva. \nc) Turnar el caso por escrito al H. Consejo Tecnico de la Facultad "
+        app:layout_constraintTop_toBottomOf="@id/tvNota"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        android:layout_marginTop="@dimen/Margin_Start_10dp"
+        android:textStyle="normal"
+        android:lineSpacingExtra="5dp"
+        />
+
+
+
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>
