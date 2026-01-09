@@ -4,12 +4,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.LinearLayout;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
@@ -20,7 +24,6 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.Arrays;
-import java.util.List;
 
 public class solicitudes_pendientes extends AppCompatActivity {
 
@@ -28,6 +31,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private LinearLayout containerSolicitudes;
     private TextView tvVacio;
+    private Spinner spinnerStatus;
 
     private boolean isAdmin;
     private String aulaAdmin;
@@ -49,30 +53,40 @@ public class solicitudes_pendientes extends AppCompatActivity {
         mAuth = FirebaseAuth.getInstance();
         containerSolicitudes = findViewById(R.id.container_solicitudes);
         tvVacio = findViewById(R.id.tv_vacio);
+        spinnerStatus = findViewById(R.id.spinnerStatus);
 
-        // datos que vienen desde ToolbarManager
+        // Configurar el Spinner
+        String[] opciones = {"Pendiente", "Aceptada", "Rechazada"};
+        ArrayAdapter<String> adapter = new ArrayAdapter<>(this, android.R.layout.simple_spinner_item, opciones);
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerStatus.setAdapter(adapter);
+
+        // Datos que vienen desde ToolbarManager
         isAdmin      = getIntent().getBooleanExtra("isAdmin", false);
         aulaAdmin    = getIntent().getStringExtra("Aula");
         horarioAdmin = getIntent().getStringExtra("Horario");
 
-        Log.d("Solicitudes", "isAdmin=" + isAdmin +
-                ", aulaAdmin=" + aulaAdmin +
-                ", horarioAdmin=" + horarioAdmin);
+        // Escuchador del Spinner para recargar cuando cambie el filtro
+        spinnerStatus.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String statusSeleccionado = opciones[position];
+                cargarSolicitudes(statusSeleccionado);
+            }
 
-        cargarSolicitudes();
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {}
+        });
     }
 
-    private void cargarSolicitudes() {
+    private void cargarSolicitudes(String statusFiltro) {
 
         if (isAdmin && "AB".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
 
             db.collection("reservas")
-                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("status", statusFiltro)
                     .whereEqualTo("turno", "Matutino")
-                    .whereIn("aula", Arrays.asList(
-                            "Laboratorio de Cómputo A",
-                            "Laboratorio de Cómputo B"
-                    ))
+                    .whereIn("aula", Arrays.asList("Laboratorio de Cómputo A", "Laboratorio de Cómputo B"))
                     .get()
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
@@ -80,12 +94,9 @@ public class solicitudes_pendientes extends AppCompatActivity {
         } else if (isAdmin && "AB".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
 
             db.collection("reservas")
-                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("status", statusFiltro)
                     .whereEqualTo("turno", "Vespertino")
-                    .whereIn("aula", Arrays.asList(
-                            "Laboratorio de Cómputo A",
-                            "Laboratorio de Cómputo B"
-                    ))
+                    .whereIn("aula", Arrays.asList("Laboratorio de Cómputo A", "Laboratorio de Cómputo B"))
                     .get()
                     .addOnSuccessListener(this::mostrarSolicitudes)
                     .addOnFailureListener(Throwable::printStackTrace);
@@ -93,7 +104,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
         } else if (isAdmin && "C".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
 
             db.collection("reservas")
-                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("status", statusFiltro)
                     .whereEqualTo("turno", "Matutino")
                     .whereEqualTo("aula", "Laboratorio de Cómputo C")
                     .get()
@@ -103,7 +114,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
         } else if (isAdmin && "C".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
 
             db.collection("reservas")
-                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("status", statusFiltro)
                     .whereEqualTo("turno", "Vespertino")
                     .whereEqualTo("aula", "Laboratorio de Cómputo C")
                     .get()
@@ -113,7 +124,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
         } else if (isAdmin && "Auditorio".equals(aulaAdmin) && "Matutino".equals(horarioAdmin)) {
 
             db.collection("reservas")
-                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("status", statusFiltro)
                     .whereEqualTo("turno", "Matutino")
                     .whereEqualTo("aula", "Auditorio FIC")
                     .get()
@@ -123,7 +134,7 @@ public class solicitudes_pendientes extends AppCompatActivity {
         } else if (isAdmin && "Auditorio".equals(aulaAdmin) && "Vespertino".equals(horarioAdmin)) {
 
             db.collection("reservas")
-                    .whereEqualTo("status", "Pendiente")
+                    .whereEqualTo("status", statusFiltro)
                     .whereEqualTo("turno", "Vespertino")
                     .whereEqualTo("aula", "Auditorio FIC")
                     .get()
@@ -131,8 +142,6 @@ public class solicitudes_pendientes extends AppCompatActivity {
                     .addOnFailureListener(Throwable::printStackTrace);
 
         } else {
-            // Por si algo sale raro y no entra a ningún if, que al menos no truene.
-            Log.w("Solicitudes", "No coincide ningún filtro de admin, no se cargan reservas.");
             tvVacio.setVisibility(View.VISIBLE);
         }
     }
@@ -149,60 +158,69 @@ public class solicitudes_pendientes extends AppCompatActivity {
         }
 
         for (DocumentSnapshot doc : querySnapshot) {
-
             View cardView = inflater.inflate(R.layout.item_card_solicitud, containerSolicitudes, false);
 
+            CardView cardReserva = cardView.findViewById(R.id.cardReserva);
 
-            String nombreProfesor = doc.getString("profesorName");
-            ((TextView) cardView.findViewById(R.id.tv_maestro))
-                    .setText(nombreProfesor != null ? nombreProfesor : "Nombre no disponible");
+            String status = doc.getString("status");
 
+            if (cardReserva != null) {
+                if ("Aceptada".equals(status)) {
+                    cardReserva.setCardBackgroundColor(getResources().getColor(R.color.Aceptar));
+                } else if ("Rechazada".equals(status)) {
+                    cardReserva.setCardBackgroundColor(getResources().getColor(R.color.Rechazar));
+                } else {
+                    cardReserva.setCardBackgroundColor(getResources().getColor(android.R.color.white));
+                }
+            }
+
+            ((TextView) cardView.findViewById(R.id.tv_maestro)).setText(doc.getString("profesorName"));
             ((TextView) cardView.findViewById(R.id.tv_materia)).setText(doc.getString("materia"));
             ((TextView) cardView.findViewById(R.id.tv_salon)).setText(doc.getString("aula"));
             ((TextView) cardView.findViewById(R.id.tv_turno)).setText(doc.getString("turno"));
             ((TextView) cardView.findViewById(R.id.tv_grupo)).setText(doc.getString("grupo"));
             ((TextView) cardView.findViewById(R.id.tv_horarios)).setText(doc.getString("horario"));
 
-            TextView tvStatus = cardView.findViewById(R.id.tv_status);
-            String status = doc.getString("status");
-            tvStatus.setText(status != null ? status : "Pendiente");
+            TextView tvStatusText = cardView.findViewById(R.id.tv_status);
+            tvStatusText.setText(status);
 
-            // --- Lógica para botones Aceptar y Rechazar ---
-            cardView.findViewById(R.id.btn_aceptar_solicitud).setOnClickListener(v -> {
-                actualizarEstadoReserva(doc, "Aceptada");
-            });
+            View btnAceptar = cardView.findViewById(R.id.btn_aceptar_solicitud);
+            View btnRechazar = cardView.findViewById(R.id.btn_rechazar_solicitud);
 
-            cardView.findViewById(R.id.btn_rechazar_solicitud).setOnClickListener(v -> {
-                actualizarEstadoReserva(doc, "Rechazada");
-            });
+            if (!"Pendiente".equals(status)) {
+                btnAceptar.setVisibility(View.GONE);
+                btnRechazar.setVisibility(View.GONE);
+
+                int colorBlanco = getResources().getColor(android.R.color.white);
+                ((TextView) cardView.findViewById(R.id.tv_maestro)).setTextColor(colorBlanco);
+                ((TextView) cardView.findViewById(R.id.tv_materia)).setTextColor(colorBlanco);
+                ((TextView) cardView.findViewById(R.id.tv_salon)).setTextColor(colorBlanco);
+                ((TextView) cardView.findViewById(R.id.tv_turno)).setTextColor(colorBlanco);
+                ((TextView) cardView.findViewById(R.id.tv_grupo)).setTextColor(colorBlanco);
+                ((TextView) cardView.findViewById(R.id.tv_horarios)).setTextColor(colorBlanco);
+                tvStatusText.setTextColor(colorBlanco);
+            } else {
+                btnAceptar.setOnClickListener(v -> actualizarEstadoReserva(doc, "Aceptada"));
+                btnRechazar.setOnClickListener(v -> actualizarEstadoReserva(doc, "Rechazada"));
+            }
 
             containerSolicitudes.addView(cardView);
         }
     }
 
-    // Método para actualizar Firestore y disparar el cambio en el calendario
     private void actualizarEstadoReserva(DocumentSnapshot doc, String nuevoEstado) {
-        String idReserva = doc.getId();
-        String horario = doc.getString("horario");
-        String aula = doc.getString("aula");
-
-        db.collection("reservas").document(idReserva)
+        db.collection("reservas").document(doc.getId())
                 .update("status", nuevoEstado)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Reserva " + nuevoEstado, Toast.LENGTH_SHORT).show();
-
                     if ("Aceptada".equals(nuevoEstado)) {
-                        // Rechaza automáticamente conflictos (misma aula y horario)
-                        rechazarConflictos(horario, aula, idReserva);
+                        rechazarConflictos(doc.getString("horario"), doc.getString("aula"), doc.getId());
                     }
-
-                    // Recargar la lista para reflejar los cambios
-                    cargarSolicitudes();
-                })
-                .addOnFailureListener(e -> Log.e("Solicitudes", "Error al actualizar", e));
+                    // Refrescar con el status actual del spinner
+                    cargarSolicitudes(spinnerStatus.getSelectedItem().toString());
+                });
     }
 
-    // Método para evitar doble reserva en el mismo espacio/tiempo
     private void rechazarConflictos(String horario, String aula, String idExcluido) {
         db.collection("reservas")
                 .whereEqualTo("horario", horario)

@@ -81,4 +81,5 @@
     <string name="laboratorio_de_computo_a_lunes_a_viernes_de_7_00_a_13_00_horas_y_de_14_00_a_20_00_horas">Laboratorio de computo A y B: Lunes a Viernes de 7:00 a 13:00 horas y de 14:00 a 20:00 horas</string>
     <string name="laboratorio_de_computo_c_lunes_a_viernes_de_8_00_a_20_00_horas">Laboratorio de computo C: Lunes a viernes de 8:00 a 20:00 horas.</string>
     <string name="reglamento">Reglamento</string>
+    <string name="status">Status:</string>
 </resources>
