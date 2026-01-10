@@ -1,39 +1,39 @@
 
 package com.example.aulahub;
 
-
-
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
+import android.graphics.Color; // IMPORTANTE: Para el color rojo
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.Toast; // IMPORTANTE: Para el mensaje
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable; // IMPORTANTE
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
 
-
 import com.example.aulahub.utils.ToolbarManager;
 import com.google.android.gms.tasks.OnCompleteListener;
-import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentSnapshot;
-
-import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.DocumentChange; // IMPORTANTE
+import com.google.firebase.firestore.EventListener; // IMPORTANTE
+import com.google.firebase.firestore.FirebaseFirestore; // IMPORTANTE
+import com.google.firebase.firestore.FirebaseFirestoreException; // IMPORTANTE
+import com.google.firebase.firestore.QuerySnapshot; // IMPORTANTE
 import com.google.firebase.messaging.FirebaseMessaging;
-
 
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
 
-//inicio del OnCreate
+    // inicio del OnCreate
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -42,7 +42,6 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
-
         if (user == null){
             Intent intent =  new Intent(this, LoginActivity.class);
             startActivity(intent);
@@ -50,9 +49,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             return;
         }
 
-
-
-        //obtener datos del login
+        // obtener datos del login
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
         Aula = getIntent().getStringExtra("Aula");
         Horario = getIntent().getStringExtra("Horario");
@@ -79,7 +76,6 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                         } else {
                             // NO está en roles (probablemente profesor)
                             aplicarRestricciones(isAdmin, Aula);
-                            // isAdmin y Aula vienen del Intent del login
                         }
 
                         // En TODOS los casos de éxito inicializamos toolbar
@@ -87,19 +83,17 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     })
                     .addOnFailureListener(e -> {
                         Log.e("HomeActivity", "Error leyendo roles", e);
-
                         // Si falla la lectura, al menos usamos lo que venga del Intent
                         aplicarRestricciones(isAdmin, Aula);
                         inicializarToolbar(mFotoPerfil, mImageButton);
                     });
         } else {
-            // No debería pasar si ya comprobaste user arriba, pero por si acaso
             aplicarRestricciones(isAdmin, Aula);
             inicializarToolbar(mFotoPerfil, mImageButton);
         }
 
-
         getToken();
+
         // Recuperar los CardView
         CardView mCardAulaA = findViewById(R.id.card_aulaA);
         CardView mCardAulaB = findViewById(R.id.card_aulaB);
@@ -112,15 +106,11 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             return insets;
         });
 
-
-        // -------------------------------------
         // BLOQUE DE EVENTO DE LAS CARDS
-        // -------------------------------------
         View.OnClickListener irAula_Horario = new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Intent exportarToCalendario = new Intent(HomeActivity.this, calendario.class);
-
                 int id = v.getId();
 
                 if (id == R.id.card_aulaA) {
@@ -145,15 +135,16 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             }
         };
 
-
         // Asignar el listener a cada card
         mCardAulaA.setOnClickListener(irAula_Horario);
         mCardAulaB.setOnClickListener(irAula_Horario);
         mCardAulaC.setOnClickListener(irAula_Horario);
         mAuditorio.setOnClickListener(irAula_Horario);
 
+        // --- NUEVO: ACTIVAR ESCUCHA DE NOTIFICACIONES ---
+        iniciarEscuchaNotificaciones();
 
-    } //terminacion de OnCreate
+    } // fin del OnCreate
 
     private void aplicarRestricciones(boolean isAdmin, String Aula) {
         CardView mCardAulaA = findViewById(R.id.card_aulaA);
@@ -161,14 +152,12 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         CardView mCardAulaC = findViewById(R.id.card_aulaC);
         CardView mAuditorio = findViewById(R.id.card_auditorio);
 
-        // Primero ocultamos todo por defecto
         mCardAulaA.setVisibility(View.GONE);
         mCardAulaB.setVisibility(View.GONE);
         mCardAulaC.setVisibility(View.GONE);
         mAuditorio.setVisibility(View.GONE);
 
         if (!isAdmin) {
-            // Si es maestro podrá ver todo
             mCardAulaA.setVisibility(View.VISIBLE);
             mCardAulaB.setVisibility(View.VISIBLE);
             mCardAulaC.setVisibility(View.VISIBLE);
@@ -191,10 +180,8 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
             }
         }
     }
-    // fin del OnCreate
 
     public void getToken(){
-
         FirebaseMessaging.getInstance().getToken()
                 .addOnCompleteListener(new OnCompleteListener<String>() {
                     @Override
@@ -203,24 +190,69 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                             Log.w(TAG, "Fetching FCM registration token failed", task.getException());
                             return;
                         }
-
-
                         String token = task.getResult();
                         Log.d("FCM", "Token FCM: " + token);
                         if (isAdmin){
-
                             mFirestore.collection("roles").document(uid).update("fcmToken", token);
-
                         }else {
-                            // Si el usuario actual es PROFESOR:
-                            mFirestore.collection("profesores")
-                                    .document(uid)                // tu “pura llave”
-                                    .update("fcmToken", token);   // aquí se guarda
+                            mFirestore.collection("profesores").document(uid).update("fcmToken", token);
+                        }
+                    }
+                });
+    }
+
+    // --- NUEVO MÉTODO PARA NOTIFICACIONES ---
+    private void iniciarEscuchaNotificaciones() {
+        if (mAuth.getCurrentUser() == null) return;
+
+        String myUid = mAuth.getCurrentUser().getUid();
+
+        // Referencia a la campanita usando el ID que vimos en activity_toolbar.xml
+        ImageButton btnCampana = findViewById(R.id.IbtnNotificaciones);
+
+        if (btnCampana == null) {
+            Log.e("Notif", "No se encontró el botón IbtnNotificaciones");
+            return;
+        }
+
+        mFirestore.collection("notificaciones")
+                .whereEqualTo("destinatarioUid", myUid)
+                .whereEqualTo("leido", false)
+                .addSnapshotListener(new EventListener<QuerySnapshot>() {
+                    @Override
+                    public void onEvent(@Nullable QuerySnapshot snapshots, @Nullable FirebaseFirestoreException e) {
+                        if (e != null) {
+                            Log.w("Notif", "Error al escuchar", e);
+                            return;
                         }
 
+                        if (snapshots != null && !snapshots.isEmpty()) {
+                            // --- HAY NOTIFICACIONES ---
+                            // 1. Pintar la campanita de ROJO
+                            btnCampana.setColorFilter(Color.RED);
+
+                            // 2. Avisar con un Toast (solo las nuevas)
+                            for (DocumentChange dc : snapshots.getDocumentChanges()) {
+                                if (dc.getType() == DocumentChange.Type.ADDED) {
+                                    String mensaje = dc.getDocument().getString("mensaje");
+                                    if (mensaje != null) {
+                                        Toast.makeText(HomeActivity.this, "🔔 " + mensaje, Toast.LENGTH_LONG).show();
+                                    }
+                                }
+                            }
+                        } else {
+                            // --- NO HAY NOTIFICACIONES ---
+                            // Volver al color original
+                            btnCampana.clearColorFilter();
+                        }
                     }
                 });
 
-
+        // Acción al hacer clic en la campana (puedes mejorar esto luego)
+        btnCampana.setOnClickListener(v -> {
+            // Abrir la pantalla de notificaciones
+            Intent intent = new Intent(HomeActivity.this, NotificacionesActivity.class);
+            startActivity(intent);
+        });
     }
 }

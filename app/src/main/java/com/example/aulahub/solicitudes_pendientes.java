@@ -22,8 +22,11 @@ import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.firestore.FieldValue;
 
 import java.util.Arrays;
+import java.util.HashMap;
+import java.util.Map;
 
 public class solicitudes_pendientes extends AppCompatActivity {
 
@@ -213,7 +216,18 @@ public class solicitudes_pendientes extends AppCompatActivity {
                 .update("status", nuevoEstado)
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Reserva " + nuevoEstado, Toast.LENGTH_SHORT).show();
+
+                    // --- NUEVO: ENVIAR NOTIFICACIÓN AL PROFESOR ---
+                    String profesorUid = doc.getString("ProfesorUID");
+                    String materia = doc.getString("materia");
+                    String fecha = doc.getString("fecha");
+                    String horario = doc.getString("horario"); // Ojo: a veces guardas la hora completa aquí
+
+                    enviarNotificacion(profesorUid, materia, nuevoEstado, fecha, horario);
+                    // ----------------------------------------------
+
                     if ("Aceptada".equals(nuevoEstado)) {
+                        // Pasamos también el ID del profesor para avisar a los rechazados (Opcional avanzado)
                         rechazarConflictos(doc.getString("horario"), doc.getString("aula"), doc.getId());
                     }
                     // Refrescar con el status actual del spinner
@@ -230,9 +244,38 @@ public class solicitudes_pendientes extends AppCompatActivity {
                 .addOnSuccessListener(snapshot -> {
                     for (DocumentSnapshot d : snapshot.getDocuments()) {
                         if (!d.getId().equals(idExcluido)) {
+                            // 1. Actualizar estado en la BD
                             d.getReference().update("status", "Rechazada");
+
+                            // 2. RECUPERAR DATOS PARA NOTIFICAR AL PROFESOR RECHAZADO
+                            // (Esto es lo que faltaba)
+                            String uidProf = d.getString("ProfesorUID");
+                            String mat = d.getString("materia");
+                            String fecha = d.getString("fecha");
+                            String hor = d.getString("horario");
+
+                            // 3. ENVIAR LA NOTIFICACIÓN
+                            enviarNotificacion(uidProf, mat, "Rechazada", fecha, hor);
                         }
                     }
                 });
+    }
+
+    // Función para enviar notificación al buzón del profesor
+    private void enviarNotificacion(String profesorUid, String materia, String nuevoEstado, String fechaReserva, String horaReserva) {
+        if (profesorUid == null || profesorUid.isEmpty()) return;
+
+        Map<String, Object> notificacion = new HashMap<>();
+        notificacion.put("destinatarioUid", profesorUid);
+        notificacion.put("titulo", "Reserva " + nuevoEstado);
+        notificacion.put("mensaje", "Tu solicitud para " + materia + " (" + fechaReserva + " " + horaReserva + ") ha sido " + nuevoEstado.toLowerCase() + ".");
+        notificacion.put("leido", false);
+        notificacion.put("fecha", FieldValue.serverTimestamp()); // Hora exacta del servidor
+        notificacion.put("tipo", "estado_reserva");
+
+        db.collection("notificaciones")
+                .add(notificacion)
+                .addOnSuccessListener(documentReference -> Log.d("Notificacion", "Notificación enviada al profesor"))
+                .addOnFailureListener(e -> Log.e("Notificacion", "Error al enviar notificación", e));
     }
 }
