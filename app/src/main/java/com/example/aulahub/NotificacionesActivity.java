@@ -68,7 +68,7 @@ public class NotificacionesActivity extends AppCompatActivity {
                             tvFecha.setText(sdf.format(date));
                         }
 
-                        // --- MAGIA: Marcar como leída automáticamente al verla ---
+                        //  Marcar como leída automáticamente al verla ---
                         if (Boolean.FALSE.equals(doc.getBoolean("leido"))) {
                             db.collection("notificaciones").document(doc.getId())
                                     .update("leido", true);
