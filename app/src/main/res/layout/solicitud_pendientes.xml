@@ -12,7 +12,7 @@
         android:id="@+id/tv_titulo"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/solicitudes_pendientes"
+        android:text="Solicitudes"
         android:textSize="28sp"
         android:textStyle="bold"
         android:gravity="center"

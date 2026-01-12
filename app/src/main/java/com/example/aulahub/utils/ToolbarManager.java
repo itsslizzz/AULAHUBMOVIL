@@ -95,6 +95,9 @@ public class ToolbarManager extends AppCompatActivity {
             if (isAdmin) {
                 popupMenu.getMenu().findItem(R.id.ItemAyuda).setVisible(false);
                 popupMenu.getMenu().findItem(R.id.ItemMisReservas).setVisible(false);
+            }else {
+                popupMenu.getMenu().findItem(R.id.ItemSolicitudesPendientes).setVisible(false);
+
             }
 
 

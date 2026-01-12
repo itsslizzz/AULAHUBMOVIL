@@ -12,7 +12,7 @@
         android:title="@string/mis_reservas"/>
     <item
         android:id="@+id/ItemSolicitudesPendientes"
-        android:title="@string/solicitudes_pendientes"/>
+        android:title="Solicitudes"/>
 
     <item
         android:id="@+id/ItemReglamento"
