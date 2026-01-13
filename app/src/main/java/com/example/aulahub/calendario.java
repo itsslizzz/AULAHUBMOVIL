@@ -519,6 +519,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
 
             tvgrupo.setVisibility(View.GONE);
             tvmateria.setVisibility(View.GONE);
+            btnContinuar.setVisibility(View.GONE);
 
             spAula.setVisibility(View.GONE);
             spMateria.setVisibility(View.GONE);
