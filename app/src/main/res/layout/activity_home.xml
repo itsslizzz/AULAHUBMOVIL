@@ -5,10 +5,10 @@
     android:id="@+id/home"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="#F8F9FA"
     tools:context=".HomeActivity">
 
     <include layout="@layout/activity_toolbar"/>
-
 
     <TextView
         android:id="@+id/tv_seleccionar_aula"
@@ -17,183 +17,205 @@
         android:text="@string/seleccion_aula"
         android:gravity="center"
         app:layout_constraintTop_toTopOf="parent"
-        android:layout_marginTop="80dp"
-        android:textSize="20sp"
+        android:layout_marginTop="110dp"
+        android:textSize="22sp"
         android:textStyle="bold"
-        android:textColor="@color/black" />
-
-
+        android:textColor="#1A1A1A" />
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_aulaA"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="30dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/tv_seleccionar_aula"
-        android:layout_margin="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp"
-
-        >
+        app:cardCornerRadius="16dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toBottomOf="@id/tv_seleccionar_aula">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center_vertical">
 
-            <TextView
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/icono_laptop" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/laboratorio_de_c_mputo_a"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginStart="50dp" />
+                android:layout_marginStart="18dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/capacidad_para_50_personas"
-                android:textStyle="italic"
-                android:textSize="14sp"
-                android:layout_marginStart="50dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/laboratorio_de_c_mputo_a"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/capacidad_para_50_personas"
+                    android:textSize="13sp"
+                    android:textColor="#666666" />
+            </LinearLayout>
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
-
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_aulaB"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/card_aulaA"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toBottomOf="@id/card_aulaA">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center_vertical">
 
-            <TextView
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/icono_laptop" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/laboratorio_de_c_mputo_b"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginStart="50dp" />
+                android:layout_marginStart="18dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/capacidad_para_30_personas"
-                android:textStyle="italic"
-                android:textSize="14sp"
-                android:layout_marginStart="50dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/laboratorio_de_c_mputo_b"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/capacidad_para_30_personas"
+                    android:textSize="13sp"
+                    android:textColor="#666666" />
+            </LinearLayout>
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_aulaC"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/card_aulaB"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp">
+        app:cardCornerRadius="16dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toBottomOf="@id/card_aulaB">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center_vertical">
 
-            <TextView
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/icono_laptop" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/laboratorio_de_computo_c"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginStart="50dp" />
+                android:layout_marginStart="18dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/capacidad_para_30_personas"
-                android:textStyle="italic"
-                android:textSize="14sp"
-                android:layout_marginStart="50dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/laboratorio_de_computo_c"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/capacidad_para_30_personas"
+                    android:textSize="13sp"
+                    android:textColor="#666666" />
+            </LinearLayout>
         </LinearLayout>
-
     </com.google.android.material.card.MaterialCardView>
-
 
     <com.google.android.material.card.MaterialCardView
         android:id="@+id/card_auditorio"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:layout_marginHorizontal="24dp"
+        android:layout_marginTop="20dp"
         android:clickable="true"
         android:focusable="true"
-        app:layout_constraintTop_toBottomOf="@id/card_aulaC"
-        android:layout_marginTop="16dp"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        android:layout_marginHorizontal="12dp"
-        app:cardCornerRadius="12dp"
-        app:cardElevation="6dp"
-        app:cardBackgroundColor="@android:color/white"
-        app:strokeColor="@android:color/black"
-        app:strokeWidth="1dp"
-        >
+        app:cardCornerRadius="16dp"
+        app:cardElevation="3dp"
+        app:strokeWidth="0dp"
+        app:layout_constraintTop_toBottomOf="@id/card_aulaC">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:padding="16dp"
-            android:orientation="vertical">
+            android:orientation="horizontal"
+            android:padding="20dp"
+            android:gravity="center_vertical">
 
-            <TextView
+            <ImageView
+                android:layout_width="45dp"
+                android:layout_height="45dp"
+                android:src="@drawable/icono_microfono" />
+
+            <LinearLayout
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:text="@string/auditorio_fic"
-                android:textSize="18sp"
-                android:textStyle="bold"
-                android:layout_marginStart="50dp" />
+                android:layout_marginStart="18dp"
+                android:orientation="vertical">
 
-            <TextView
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/capacidad_para_200_personas"
-                android:textStyle="italic"
-                android:textSize="14sp"
-                android:layout_marginStart="50dp" />
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/auditorio_fic"
+                    android:textSize="17sp"
+                    android:textStyle="bold"
+                    android:textColor="#1A1A1A" />
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/capacidad_para_200_personas"
+                    android:textSize="13sp"
+                    android:textColor="#666666" />
+            </LinearLayout>
         </LinearLayout>
     </com.google.android.material.card.MaterialCardView>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
-
