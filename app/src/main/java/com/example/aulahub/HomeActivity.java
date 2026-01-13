@@ -4,17 +4,17 @@ package com.example.aulahub;
 import static android.content.ContentValues.TAG;
 
 import android.content.Intent;
-import android.graphics.Color; // IMPORTANTE: Para el color rojo
+import android.graphics.Color;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
-import android.widget.Toast; // IMPORTANTE: Para el mensaje
+import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
 import androidx.annotation.NonNull;
-import androidx.annotation.Nullable; // IMPORTANTE
+import androidx.annotation.Nullable;
 import androidx.cardview.widget.CardView;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
@@ -24,11 +24,11 @@ import com.example.aulahub.utils.ToolbarManager;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
-import com.google.firebase.firestore.DocumentChange; // IMPORTANTE
-import com.google.firebase.firestore.EventListener; // IMPORTANTE
-import com.google.firebase.firestore.FirebaseFirestore; // IMPORTANTE
-import com.google.firebase.firestore.FirebaseFirestoreException; // IMPORTANTE
-import com.google.firebase.firestore.QuerySnapshot; // IMPORTANTE
+import com.google.firebase.firestore.DocumentChange;
+import com.google.firebase.firestore.EventListener;
+import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.QuerySnapshot;
 import com.google.firebase.messaging.FirebaseMessaging;
 
 public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
@@ -143,7 +143,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
         mCardAulaC.setOnClickListener(irAula_Horario);
         mAuditorio.setOnClickListener(irAula_Horario);
 
-        // --- NUEVO: ACTIVAR ESCUCHA DE NOTIFICACIONES ---
+        // CTIVAR ESCUCHA DE NOTIFICACIONES
         iniciarEscuchaNotificaciones();
 
     } // fin del OnCreate
@@ -203,13 +203,13 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                 });
     }
 
-    // --- NUEVO MÉTODO PARA NOTIFICACIONES ---
+    // --- metodo notificaciones
     private void iniciarEscuchaNotificaciones() {
         if (mAuth.getCurrentUser() == null) return;
 
         String myUid = mAuth.getCurrentUser().getUid();
 
-        // Referencia a la campanita usando el ID que vimos en activity_toolbar.xml
+        // Referencia a la campanita usando el ID en activity_toolbar.xml
         ImageButton btnCampana = findViewById(R.id.IbtnNotificaciones);
 
         if (btnCampana == null) {
@@ -250,7 +250,7 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     }
                 });
 
-        // Acción al hacer clic en la campana (puedes mejorar esto luego)
+        // Acción al hacer clic en la campana
         btnCampana.setOnClickListener(v -> {
             // Abrir la pantalla de notificaciones
             Intent intent = new Intent(HomeActivity.this, NotificacionesActivity.class);

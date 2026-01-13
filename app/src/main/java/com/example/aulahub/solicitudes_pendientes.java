@@ -217,17 +217,16 @@ public class solicitudes_pendientes extends AppCompatActivity {
                 .addOnSuccessListener(aVoid -> {
                     Toast.makeText(this, "Reserva " + nuevoEstado, Toast.LENGTH_SHORT).show();
 
-                    // --- NUEVO: ENVIAR NOTIFICACIÓN AL PROFESOR ---
+                    //ENVIAR NOTIFICACIÓN AL PROFESOR
                     String profesorUid = doc.getString("ProfesorUID");
                     String materia = doc.getString("materia");
                     String fecha = doc.getString("fecha");
-                    String horario = doc.getString("horario"); // Ojo: a veces guardas la hora completa aquí
+                    String horario = doc.getString("horario");
 
                     enviarNotificacion(profesorUid, materia, nuevoEstado, fecha, horario);
-                    // ----------------------------------------------
 
                     if ("Aceptada".equals(nuevoEstado)) {
-                        // Pasamos también el ID del profesor para avisar a los rechazados (Opcional avanzado)
+                        // Pasamos también el ID del profesor para avisar a los rechazados
                         rechazarConflictos(doc.getString("horario"), doc.getString("aula"), doc.getId());
                     }
                     // Refrescar con el status actual del spinner
@@ -248,7 +247,6 @@ public class solicitudes_pendientes extends AppCompatActivity {
                             d.getReference().update("status", "Rechazada");
 
                             // 2. RECUPERAR DATOS PARA NOTIFICAR AL PROFESOR RECHAZADO
-                            // (Esto es lo que faltaba)
                             String uidProf = d.getString("ProfesorUID");
                             String mat = d.getString("materia");
                             String fecha = d.getString("fecha");

@@ -92,7 +92,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         HorizontalScrollView scrollMatutino = findViewById(R.id.scrollMatutino);
         HorizontalScrollView scrollVespertino = findViewById(R.id.scrollVespertino);
 
-        // NUEVO: calendario semanal
+        // calendario semanal
         LinearLayout layoutSemana = findViewById(R.id.layoutSemana);
         TableLayout tlSemana = findViewById(R.id.tlSemana);
         TextView tvRangoSemana = findViewById(R.id.tvRangoSemana);
@@ -127,7 +127,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         if (imagen != 0) imgAula.setImageResource(imagen);
 
 
-        // 1️⃣ Obtener materias del profesor
+        // Obtener materias del profesor
         mFirestore.collection("profesores")
                 .document(uid)
                 .collection("salones")
@@ -157,7 +157,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                 })
                 .addOnFailureListener(e -> Log.e("FirestoreDebug", "Error cargando materias", e));
 
-        // 2️⃣ Mostrar grupos según la materia seleccionada
+        //  Mostrar grupos según la materia seleccionada
         spMateria.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
@@ -317,8 +317,6 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                                     });
                         }
 
-                        // Aquí ya puedes lanzar la pantalla de confirmación si quieres,
-                        // pasando la lista de horariosSeleccionados como ya lo haces.
                         Intent intent = new Intent(calendario.this, ConfirmacionActivity.class);
                         intent.putExtra("materia", materiaSeleccionada);
                         intent.putExtra("aula", aulaSeleccionada);
@@ -449,7 +447,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             tlSemana.addView(fila);
         }
 
-        // Texto del rango de la semana (ej: 10 Nov 2025 - 16 Nov 2025)
+        // Texto del rango de la semana
         Calendar finSemana = (Calendar) semanaActualInicio.clone();
         finSemana.add(Calendar.DAY_OF_MONTH, 6);
         SimpleDateFormat formatoTitulo =
@@ -463,7 +461,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         cargarReservasAceptadasSemana();
     }
 
-    // Actualiza el TextView donde muestras las fechas seleccionadas
+    // Actualiza el TextView donde muestra las fechas seleccionadas
     private void actualizarTextoFechas(
             TextView tvFechasSeleccionadas,
             List<String> horariosSeleccionados
@@ -685,7 +683,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                             ContextCompat.getColorStateList(this, R.color.Rechazar)
                     );
 
-                    // Texto con info del profesor (puedes añadir materia/grupo si quieres)
+                    // Texto con info del profesor
                     if (profesorName != null && !profesorName.isEmpty()) {
                         celda.setText(profesorName);
                     } else {
@@ -695,7 +693,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
                     celda.setEnabled(false);
 
                     Log.d("Reservas", "Celda encontrada y pintada para " + claveHorario);
-                    return; // ya la encontramos, nos vamos
+                    return;
                 }
             }
         }
