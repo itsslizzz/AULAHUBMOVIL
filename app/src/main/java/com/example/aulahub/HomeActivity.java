@@ -131,6 +131,8 @@ public class HomeActivity extends com.example.aulahub.utils.ToolbarManager {
                     exportarToCalendario.putExtra("imagen", R.drawable.auditorio);
                 }
                 exportarToCalendario.putExtra("isAdmin", isAdmin);
+                exportarToCalendario.putExtra("Aula", Aula);
+                exportarToCalendario.putExtra("Horario", Horario);
                 startActivity(exportarToCalendario);
             }
         };

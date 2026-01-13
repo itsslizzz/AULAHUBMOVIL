@@ -70,8 +70,10 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         ImageButton mImageButton = findViewById(R.id.IbtnMenu);
         ImageView mFotoPerfil = findViewById(R.id.IVPerfil);
 
-        inicializarToolbar(mFotoPerfil, mImageButton);
         isAdmin = getIntent().getBooleanExtra("isAdmin", false);
+        Aula = getIntent().getStringExtra("Aula");
+        Horario = getIntent().getStringExtra("Horario");
+        inicializarToolbar(mFotoPerfil, mImageButton);
 
 
         // --- Referencias ---
