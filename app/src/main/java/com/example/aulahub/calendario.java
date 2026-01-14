@@ -104,7 +104,6 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         scrollMatutino.setVisibility(View.GONE);
         scrollVespertino.setVisibility(View.GONE);
         layoutSemana.setVisibility(View.GONE);
-        btn_Reservar.setVisibility(View.GONE);
 
         //Obetner valores de la variables exportardas de otras actividades
 
@@ -231,6 +230,11 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             horariosSeleccionados.clear();
             tvFechasSeleccionadas.setText("");
             tvFechasSeleccionadas.setVisibility(View.GONE);
+            if (!isAdmin) {
+                btn_Reservar.setVisibility(View.VISIBLE);
+            } else {
+                btn_Reservar.setVisibility(View.GONE);
+            }
 
             String turnoSeleccionado = spTurno.getSelectedItem().toString();
             String[] horasTurno = obtenerHorasPorTurno(turnoSeleccionado);
@@ -244,7 +248,6 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             scrollMatutino.setVisibility(View.GONE);
             scrollVespertino.setVisibility(View.GONE);
 
-            btn_Reservar.setVisibility(View.VISIBLE);
         });
 
         if (isAdmin){
@@ -504,6 +507,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
         TextView tvgrupo = findViewById(R.id.tvgrupo);
         Spinner spAula = findViewById(R.id.spAula);
         Button btnContinuar = findViewById(R.id.btnContinuar);
+        Button btn_Reservar=findViewById(R.id.btn_Reservar);
 
         if(!isAdmin) {
             tv_horarios.setVisibility(View.VISIBLE);
@@ -520,6 +524,7 @@ public class calendario extends com.example.aulahub.utils.ToolbarManager {
             tvgrupo.setVisibility(View.GONE);
             tvmateria.setVisibility(View.GONE);
             btnContinuar.setVisibility(View.GONE);
+            btn_Reservar.setVisibility(View.GONE);
 
             spAula.setVisibility(View.GONE);
             spMateria.setVisibility(View.GONE);
